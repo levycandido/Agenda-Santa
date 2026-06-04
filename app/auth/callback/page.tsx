@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function CallbackPage() {
+function CallbackContent() {
   const params = useSearchParams();
   const code = params.get("code");
 
@@ -63,5 +63,13 @@ export default function CallbackPage() {
       <h1 className="text-2xl font-bold">Login</h1>
       <p className="mt-4">{message}</p>
     </div>
+  );
+}
+
+export default function CallbackPage() {
+  return (
+    <Suspense fallback={<div className="p-10"><p>Carregando...</p></div>}>
+      <CallbackContent />
+    </Suspense>
   );
 }

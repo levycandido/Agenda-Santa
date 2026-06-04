@@ -37,7 +37,7 @@ function UserForm() {
     e.preventDefault();
     try {
       setLoading(true);
-      await createUser({ name, email });
+      await createUser({ nome: name, email, roles: [], cor: "" });
       setName("");
       setEmail("");
       setDialog({ message: "Usuário cadastrado com sucesso!", onOk: () => setDialog(null) });
