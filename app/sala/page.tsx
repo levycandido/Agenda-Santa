@@ -64,7 +64,7 @@ export default function RoomsPage() {
     : rooms;
 
   return (
-    <Layout>
+    <Layout onAddClick={() => canCreate && router.push('/sala/new')}>
       {/* Desktop layout */}
         <div className="hidden md:block">
           {/* Page header */}

@@ -47,7 +47,7 @@ export default function UsersPage() {
   }
 
   const activeUsers = users.filter(
-    (u) => u.status !== "DISABLED" && u.status !== "DESATIVADO" && !isUserDeactivated(u.userId)
+    (u) => u.status === "ACTIVED"
   );
 
   const filteredUsers = searchTerm.trim()
@@ -59,7 +59,7 @@ export default function UsersPage() {
     : activeUsers;
 
   return (
-    <Layout>
+    <Layout onAddClick={() => canCreate && router.push('/users/new')}>
       {/* Desktop layout */}
         <div className="hidden md:block">
           {/* Page header */}
