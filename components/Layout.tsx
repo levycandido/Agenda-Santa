@@ -123,7 +123,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   setMobileMenuOpen(false);
                   logout();
                 }}
-                className="flex items-center gap-3 px-4 py-3 text-sm font-medium border-t border-gray-200 text-red-600 hover:bg-red-50 transition-colors w-full"
+                className="flex items-center gap-3 px-4 py-3 text-sm font-medium border-t border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors w-full"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
