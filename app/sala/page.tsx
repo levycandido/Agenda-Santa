@@ -236,10 +236,15 @@ export default function RoomsPage() {
                 return (
                   <button
                     key={r.roomId}
-                    onClick={() =>
-                      router.push(`/sala/${r.roomId}/edit?name=${encodeURIComponent(r.name)}`)
-                    }
-                    className="text-left w-full bg-white rounded-lg flex items-center gap-3 px-4 py-3 border border-gray-100 hover:bg-gray-50 transition-colors"
+                    onClick={() => {
+                      if (canCreate) {
+                        router.push(`/sala/${r.roomId}/edit?name=${encodeURIComponent(r.name)}`);
+                      }
+                    }}
+                    disabled={!canCreate}
+                    className={`text-left w-full bg-white rounded-lg flex items-center gap-3 px-4 py-3 border border-gray-100 transition-colors ${
+                      canCreate ? "hover:bg-gray-50 cursor-pointer" : "cursor-not-allowed opacity-60"
+                    }`}
                   >
                     {/* Icon */}
                     <div

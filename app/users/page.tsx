@@ -237,12 +237,17 @@ export default function UsersPage() {
                 return (
                   <button
                     key={u.userId}
-                    onClick={() =>
-                      router.push(
-                        `/users/${u.userId}/edit?cor=${encodeURIComponent(u.color || u.cor || "")}`
-                      )
-                    }
-                    className="text-left w-full bg-white rounded-lg flex items-center gap-3 px-4 py-3 border border-gray-100 hover:bg-gray-50 transition-colors"
+                    onClick={() => {
+                      if (canCreate) {
+                        router.push(
+                          `/users/${u.userId}/edit?cor=${encodeURIComponent(u.color || u.cor || "")}`
+                        );
+                      }
+                    }}
+                    disabled={!canCreate}
+                    className={`text-left w-full bg-white rounded-lg flex items-center gap-3 px-4 py-3 border border-gray-100 transition-colors ${
+                      canCreate ? "hover:bg-gray-50 cursor-pointer" : "cursor-not-allowed opacity-60"
+                    }`}
                   >
                     {/* Avatar */}
                     <div
