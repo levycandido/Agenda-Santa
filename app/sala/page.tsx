@@ -65,8 +65,7 @@ export default function RoomsPage() {
 
   return (
     <Layout>
-      <RequirePermission permission="ROOMS_VIEW">
-        {/* Desktop layout */}
+      {/* Desktop layout */}
         <div className="hidden md:block">
           {/* Page header */}
           <div className="mb-6">
@@ -266,7 +265,6 @@ export default function RoomsPage() {
             </div>
           )}
         </div>
-      </RequirePermission>
 
       {pendingDelete && (
         <ConfirmDialog

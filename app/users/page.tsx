@@ -60,8 +60,7 @@ export default function UsersPage() {
 
   return (
     <Layout>
-      <RequirePermission permission="USERS_VIEW">
-        {/* Desktop layout */}
+      {/* Desktop layout */}
         <div className="hidden md:block">
           {/* Page header */}
           <div className="mb-6">
@@ -269,7 +268,6 @@ export default function UsersPage() {
             </div>
           )}
         </div>
-      </RequirePermission>
 
       {pendingDelete && (
         <ConfirmDialog
