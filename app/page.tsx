@@ -80,35 +80,31 @@ export default function HomePage() {
   if (loading || user) return null;
 
   return (
-    <div className="flex min-h-screen items-end lg:items-center justify-center p-0 lg:p-8 relative overflow-hidden">
-      {/* Fundo da página de login */}
-      <div className="absolute inset-0 z-0">
-        {/* Imagem de Igreja como fundo no mobile */}
-        <div className="absolute inset-0 lg:hidden">
-          <Image
-            src="/images/igreja.png"
-            alt="Igreja Batista Vida Abundante"
-            fill
-            className="object-cover"
-            quality={90}
-            priority
-          />
-          {/* Overlay gradiente no mobile */}
-          <div className="absolute inset-0 bg-gradient-to-b from-purple-600/20 via-purple-600/40 to-purple-700/60" />
-        </div>
+    <div
+      className="flex min-h-screen items-end lg:items-center justify-center p-0 lg:p-8 relative overflow-hidden bg-cover bg-center"
+      style={{
+        backgroundImage: "url('/images/igreja.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center"
+      }}
+    >
+      {/* Overlay gradiente */}
+      <div
+        className="absolute inset-0 z-0 lg:hidden"
+        style={{
+          background: "linear-gradient(to bottom, rgba(126, 34, 206, 0.2), rgba(126, 34, 206, 0.4), rgba(88, 28, 135, 0.6))"
+        }}
+      />
 
-        {/* Fundo padrão no desktop */}
-        <div className="hidden lg:block absolute inset-0">
-          <Image
-            src="/images/fundo-login.png"
-            alt="Fundo login"
-            fill
-            className="object-cover"
-            quality={90}
-            priority
-          />
-        </div>
-      </div>
+      {/* Fundo desktop */}
+      <div
+        className="absolute inset-0 z-0 hidden lg:block"
+        style={{
+          backgroundImage: "url('/images/fundo-login.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center"
+        }}
+      />
 
       {/* Ícone da Igreja no topo (Mobile) */}
       <div className="absolute top-16 left-1/2 -translate-x-1/2 z-20 lg:hidden">
