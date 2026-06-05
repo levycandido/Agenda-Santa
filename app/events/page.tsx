@@ -582,7 +582,7 @@ export default function EventsPage() {
 
         {/* Content */}
         <div className="flex-1 overflow-hidden">
-          <RequirePermission permission={["EVENTS_VIEW", "EVENTS_CREATE"]}>
+          <RequirePermission permission="EVENTS_VIEW">
             <>
               {/* ── MOBILE LAYOUT ── */}
               <div className="md:hidden h-full flex flex-col bg-[#f8f8fb]">

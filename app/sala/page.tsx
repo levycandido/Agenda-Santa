@@ -65,7 +65,7 @@ export default function RoomsPage() {
 
   return (
     <Layout>
-      <RequirePermission permission={["ROOMS_VIEW", "ROOMS_CREATE"]}>
+      <RequirePermission permission="ROOMS_VIEW">
         {/* Desktop layout */}
         <div className="hidden md:block">
           {/* Page header */}

@@ -60,7 +60,7 @@ export default function UsersPage() {
 
   return (
     <Layout>
-      <RequirePermission permission={["USERS_VIEW", "USERS_CREATE"]}>
+      <RequirePermission permission="USERS_VIEW">
         {/* Desktop layout */}
         <div className="hidden md:block">
           {/* Page header */}
