@@ -162,7 +162,7 @@ export function Layout({ children, onAddClick }: { children: React.ReactNode; on
         </div>
 
         {/* Main content */}
-        <main className="flex-1 overflow-auto md:p-6 p-4">{children}</main>
+        <main className="flex-1 overflow-auto md:p-6 p-4 md:pb-4 pb-20">{children}</main>
 
         {/* Mobile bottom navigation */}
         <div className="md:hidden shrink-0 bg-white border-t border-gray-200 flex items-center justify-around px-2 py-2">
