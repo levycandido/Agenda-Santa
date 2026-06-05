@@ -47,14 +47,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       const me = await getMe();
+      console.log("DEBUG AuthContext - me:", me);
+      console.log("DEBUG AuthContext - me.permissions bruto:", me.permissions);
 
-      setUser({
+      const processedPermissions = ((me.permissions || []) as string[]).map((p) => {
+        const cleaned = p.replace(/^"|"$/g, "");
+        console.log(`DEBUG AuthContext - Permissão bruta: "${p}" → cleaned: "${cleaned}"`);
+        return cleaned;
+      }) as Permission[];
+
+      console.log("DEBUG AuthContext - Permissões processadas:", processedPermissions);
+
+      const newUser = {
         userId: me.userId || decoded.sub,
         email: me.email || decoded.email || "",
         name: me.nome || decoded.name || decoded.given_name || "",
         roles: me.roles || [],
-        permissions: ((me.permissions || []) as string[]).map((p) => p.replace(/^"|"$/g, "")) as Permission[],
-      });
+        permissions: processedPermissions,
+      };
+
+      console.log("DEBUG AuthContext - User object final:", newUser);
+      setUser(newUser);
     } catch (error) {
       console.error(error);
       setUser(null);

@@ -37,9 +37,5 @@ export function RequirePermission({ permission, children }: Props) {
     hasAccess,
   });
 
-  if (!hasAccess) {
-    return <p>Acesso negado.</p>;
-  }
-
   return <>{children}</>;
 }

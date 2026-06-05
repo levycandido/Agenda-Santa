@@ -192,6 +192,7 @@ export default function EventsPage() {
   const today = todayIso();
   const { user, logout } = useAuth();
   const canCreate = user?.permissions.includes("EVENTS_CREATE");
+  console.log("DEBUG EventsPage render - user:", user, "canCreate:", canCreate);
   const [eventDate, setEventDate] = useState(today);
   const [startTime, setStartTime] = useState("");
   const [selectedUserName, setSelectedUserName] = useState("");
