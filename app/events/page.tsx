@@ -245,6 +245,8 @@ export default function EventsPage() {
         nome: user.name,
         email: user.email,
         perfis: user.roles,
+        permissoes: user.permissions,
+        temEVENTS_VIEW: user.permissions.includes("EVENTS_VIEW"),
       });
     }
   }, [user]);
