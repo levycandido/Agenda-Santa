@@ -71,7 +71,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <div className="p-4 border-b border-gray-200">
                 <h2 className="text-lg font-bold text-gray-900">Menu</h2>
               </div>
-              <nav className="flex-1 overflow-y-auto">
+              <nav className="overflow-y-auto">
                 <Link
                   href="/events"
                   onClick={() => setMobileMenuOpen(false)}
