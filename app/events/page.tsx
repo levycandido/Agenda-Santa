@@ -384,7 +384,7 @@ export default function EventsPage() {
 
   const gridCols =
     rooms.length > 0
-      ? `80px repeat(${rooms.length}, minmax(160px, 1fr))`
+      ? `80px repeat(${rooms.length}, minmax(100px, 1fr))`
       : "80px 1fr";
 
   return (
@@ -441,7 +441,7 @@ export default function EventsPage() {
                     <span className="text-gray-800 truncate">{selectedUserName}</span>
                   </>
                 ) : (
-                  <span className="text-gray-400">— Selecione um Colaborador —</span>
+                  <span className="text-gray-400">Colaborador</span>
                 )}
                 <svg className="ml-auto w-4 h-4 text-gray-400 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
@@ -455,7 +455,7 @@ export default function EventsPage() {
                     onClick={() => { setSelectedUserName(""); setUserSelectOpen(false); }}
                     className="w-full text-left px-3 py-2 text-sm text-gray-400 hover:bg-gray-50"
                   >
-                    — Selecione um Colaborador —
+                    Todos
                   </button>
                   {activeUsers.map((u) => {
                     const color = u.color || u.cor || "#94a3b8";
@@ -492,7 +492,7 @@ export default function EventsPage() {
             style={{ gridTemplateColumns: gridCols }}
           >
             {/* Cabeçalho das salas (sticky) */}
-            <div className="sticky top-0 z-20 bg-white border-b border-r" />
+            <div className="sticky top-0 left-0 z-30 bg-white border-b border-r" />
             {rooms.map((room) => (
               <div
                 key={room.roomId}
@@ -522,10 +522,10 @@ export default function EventsPage() {
                   <React.Fragment key={`${day}-${hour}`}>
                     <button
                       onClick={() => setStartTime(hour)}
-                      className={`border-b border-r px-3 py-2 text-sm text-left transition-colors hover:bg-blue-50 ${
+                      className={`sticky left-0 z-10 border-b border-r px-3 py-2 text-sm text-left transition-colors hover:bg-blue-50 ${
                         startTime === hour
                           ? "bg-blue-100 font-semibold text-blue-700"
-                          : "text-gray-500"
+                          : "bg-white text-gray-500"
                       }`}
                     >
                       {hour}
