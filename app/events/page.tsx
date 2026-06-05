@@ -543,7 +543,7 @@ export default function EventsPage() {
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
 
         {/* Mobile top bar */}
-        <div className="md:hidden bg-indigo-600 px-4 py-3 flex items-center justify-between shrink-0">
+        <div className="md:hidden bg-indigo-600 px-4 py-3 flex items-center justify-between shrink-0 relative z-50">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="text-white p-1 hover:bg-indigo-700 rounded transition-colors"
@@ -785,7 +785,7 @@ export default function EventsPage() {
 
       {/* Mobile menu overlay */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-30 md:hidden">
+        <div className="fixed inset-0 z-50 md:hidden">
           <div
             className="absolute inset-0 bg-black/50"
             onClick={() => setMobileMenuOpen(false)}
