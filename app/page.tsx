@@ -81,9 +81,21 @@ export default function HomePage() {
   if (loading || user) return null;
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 lg:p-8 bg-gradient-to-br from-slate-50 via-purple-50 to-slate-100">
+    <div className="flex min-h-screen items-center justify-center p-4 lg:p-8 relative overflow-hidden">
+      {/* Fundo da página de login */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/images/fundo-login.png"
+          alt="Fundo login"
+          fill
+          className="object-cover"
+          quality={90}
+          priority
+        />
+      </div>
+
       {/* Card de login com espaço livre em volta */}
-      <div className="flex w-full max-w-5xl shadow-2xl rounded-3xl overflow-hidden">
+      <div className="flex w-full max-w-5xl shadow-2xl rounded-3xl overflow-hidden relative z-10">
         {/* Coluna esquerda - Desktop only */}
         <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-b from-indigo-600 via-purple-600 to-purple-700 flex-col items-center justify-between p-12 relative overflow-hidden">
         {/* Imagem de fundo da Igreja */}
