@@ -83,25 +83,30 @@ export default function HomePage() {
     <div className="flex min-h-screen items-end lg:items-center justify-center p-0 lg:p-8 relative overflow-hidden">
       {/* Fundo da página de login */}
       <div className="absolute inset-0 z-0">
-        <Image
-          src="/images/fundo-login.png"
-          alt="Fundo login"
-          fill
-          className="object-cover"
-          quality={90}
-          priority
-        />
-        {/* Overlay com imagem da Igreja no mobile */}
+        {/* Imagem de Igreja como fundo no mobile */}
         <div className="absolute inset-0 lg:hidden">
           <Image
             src="/images/igreja.png"
             alt="Igreja Batista Vida Abundante"
             fill
-            className="object-cover opacity-60"
+            className="object-cover"
             quality={90}
+            priority
           />
           {/* Overlay gradiente no mobile */}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-600/30 to-purple-700/70" />
+          <div className="absolute inset-0 bg-gradient-to-b from-purple-600/20 via-purple-600/40 to-purple-700/60" />
+        </div>
+
+        {/* Fundo padrão no desktop */}
+        <div className="hidden lg:block absolute inset-0">
+          <Image
+            src="/images/fundo-login.png"
+            alt="Fundo login"
+            fill
+            className="object-cover"
+            quality={90}
+            priority
+          />
         </div>
       </div>
 
