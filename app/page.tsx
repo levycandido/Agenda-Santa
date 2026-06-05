@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { useAuth } from "@/app/auth/AuthContext";
 
 const COGNITO_DOMAIN = process.env.NEXT_PUBLIC_COGNITO_DOMAIN!;
@@ -66,76 +67,6 @@ const providers = [
   },
 ];
 
-function ChurchIllustration() {
-  return (
-    <svg viewBox="0 0 200 280" className="w-full h-full" fill="none">
-      {/* Céu com gradiente efeito */}
-      <defs>
-        <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="rgba(255,255,255,0.1)" />
-          <stop offset="100%" stopColor="rgba(0,0,0,0.2)" />
-        </linearGradient>
-      </defs>
-
-      {/* Ícone da igreja no topo */}
-      <g transform="translate(100, 30)">
-        {/* Cruz */}
-        <line x1="0" y1="-15" x2="0" y2="5" stroke="white" strokeWidth="3" />
-        <line x1="-8" y1="-5" x2="8" y2="-5" stroke="white" strokeWidth="3" />
-        {/* Casa */}
-        <path d="M -20 5 L 0 -15 L 20 5" stroke="white" strokeWidth="3" fill="none" />
-        <rect x="-20" y="5" width="40" height="30" stroke="white" strokeWidth="3" fill="none" />
-        {/* Porta com coração */}
-        <rect x="-8" y="15" width="16" height="20" stroke="white" strokeWidth="2" fill="none" />
-        <path
-          d="M 0 20 C -2 18 -5 18 -6 20 C -7 21 -7 23 0 29 C 7 23 7 21 6 20 C 5 18 2 18 0 20"
-          fill="white"
-        />
-      </g>
-
-      {/* Ilustração da Igreja/Casa no meio */}
-      <g transform="translate(0, 100)">
-        {/* Telhado */}
-        <path d="M 30 20 L 100 0 L 170 20" stroke="white" strokeWidth="2" fill="rgba(255,255,255,0.05)" />
-
-        {/* Parede principal */}
-        <rect x="30" y="20" width="140" height="120" stroke="white" strokeWidth="2" fill="rgba(255,255,255,0.03)" />
-
-        {/* Janelas esquerda */}
-        <rect x="50" y="40" width="20" height="20" stroke="white" strokeWidth="1.5" fill="none" />
-        <line x1="60" y1="40" x2="60" y2="60" stroke="white" strokeWidth="1" />
-        <line x1="50" y1="50" x2="70" y2="50" stroke="white" strokeWidth="1" />
-
-        <rect x="50" y="75" width="20" height="20" stroke="white" strokeWidth="1.5" fill="none" />
-        <line x1="60" y1="75" x2="60" y2="95" stroke="white" strokeWidth="1" />
-        <line x1="50" y1="85" x2="70" y2="85" stroke="white" strokeWidth="1" />
-
-        {/* Janelas direita */}
-        <rect x="130" y="40" width="20" height="20" stroke="white" strokeWidth="1.5" fill="none" />
-        <line x1="140" y1="40" x2="140" y2="60" stroke="white" strokeWidth="1" />
-        <line x1="130" y1="50" x2="150" y2="50" stroke="white" strokeWidth="1" />
-
-        <rect x="130" y="75" width="20" height="20" stroke="white" strokeWidth="1.5" fill="none" />
-        <line x1="140" y1="75" x2="140" y2="95" stroke="white" strokeWidth="1" />
-        <line x1="130" y1="85" x2="150" y2="85" stroke="white" strokeWidth="1" />
-
-        {/* Porta grande no centro */}
-        <rect x="80" y="90" width="40" height="50" stroke="white" strokeWidth="2" fill="rgba(255,255,255,0.02)" />
-        <rect x="85" y="95" width="30" height="40" stroke="white" strokeWidth="1.5" fill="none" />
-
-        {/* Maçaneta */}
-        <circle cx="112" cy="115" r="2" fill="white" />
-
-        {/* Degraus */}
-        <line x1="75" y1="140" x2="125" y2="140" stroke="white" strokeWidth="1" />
-        <line x1="70" y1="147" x2="130" y2="147" stroke="white" strokeWidth="1" />
-      </g>
-
-      {/* Efeito de padrão/textura */}
-      <rect x="0" y="0" width="200" height="280" fill="url(#skyGradient)" />
-    </svg>
-  );
-}
 
 export default function HomePage() {
   const { user, loading } = useAuth();
@@ -153,14 +84,33 @@ export default function HomePage() {
     <div className="flex min-h-screen">
       {/* Coluna esquerda - Desktop only */}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-b from-indigo-600 via-purple-600 to-purple-700 flex-col items-center justify-between p-12 relative overflow-hidden">
-        {/* Ilustração da Igreja */}
+        {/* Imagem de fundo da Igreja */}
         <div className="absolute inset-0">
-          <ChurchIllustration />
+          <Image
+            src="/images/igreja.png"
+            alt="Igreja Batista Vida Abundante"
+            fill
+            className="object-cover"
+            quality={90}
+            priority
+          />
+          {/* Overlay semi-transparente */}
+          <div className="absolute inset-0 bg-gradient-to-b from-indigo-600/40 via-purple-600/60 to-purple-700/80" />
         </div>
 
-        {/* Conteúdo relativo */}
-        <div className="relative z-10 flex-1 flex flex-col items-center justify-center">
-          <div className="mt-20" />
+        {/* Ícone da Igreja no topo */}
+        <div className="relative z-10 mt-8">
+          <svg viewBox="0 0 100 120" className="w-20 h-20" fill="none">
+            <line x1="50" y1="10" x2="50" y2="30" stroke="white" strokeWidth="4" />
+            <line x1="40" y1="18" x2="60" y2="18" stroke="white" strokeWidth="4" />
+            <path d="M 20 45 L 50 25 L 80 45" stroke="white" strokeWidth="4" fill="none" />
+            <rect x="25" y="45" width="50" height="55" stroke="white" strokeWidth="4" fill="none" />
+            <rect x="42" y="70" width="16" height="30" stroke="white" strokeWidth="3" fill="none" />
+            <path
+              d="M 50 78 C 48 76 45 76 44 78 C 43 79 43 81 50 87 C 57 81 57 79 56 78 C 55 76 52 76 50 78"
+              fill="white"
+            />
+          </svg>
         </div>
 
         {/* Citação no rodapé */}
