@@ -247,9 +247,11 @@ export default function EventsPage() {
         perfis: user.roles,
         permissoes: user.permissions,
         temEVENTS_VIEW: user.permissions.includes("EVENTS_VIEW"),
+        temEVENTS_CREATE: user.permissions.includes("EVENTS_CREATE"),
+        canCreate: canCreate,
       });
     }
-  }, [user]);
+  }, [user, canCreate]);
 
   useEffect(() => {
     if (!user) return;
@@ -387,11 +389,14 @@ export default function EventsPage() {
   }
 
   async function handleCellClick(day: string, hour: string, roomId: string) {
+    console.log("handleCellClick chamado:", { day, hour, roomId, canCreate, selectedUserName });
     if (!canCreate) {
+      console.log("Sem permissão EVENTS_CREATE", { canCreate });
       showAlert("Você não tem permissão para criar ou editar eventos.");
       return;
     }
     if (!selectedUserName) {
+      console.log("Sem usuário selecionado", { selectedUserName });
       showAlert("Selecione uma pessoa antes de criar um evento.");
       return;
     }
