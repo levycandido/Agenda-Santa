@@ -10,6 +10,7 @@ type CognitoIdToken = {
   email?: string;
   name?: string;
   given_name?: string;
+  exp?: number;
 };
 
 type AuthContextType = {
@@ -37,6 +38,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     try {
       const decoded = jwtDecode<CognitoIdToken>(idToken);
+
+      if (decoded.exp && decoded.exp * 1000 < Date.now()) {
+        localStorage.removeItem("id_token");
+        setUser(null);
+        setLoading(false);
+        return;
+      }
 
       const me = await getMe();
 
