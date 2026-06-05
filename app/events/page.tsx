@@ -190,7 +190,7 @@ function NewEventModal({
 
 export default function EventsPage() {
   const today = todayIso();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const canCreate = user?.permissions.includes("EVENTS_CREATE");
   const [eventDate, setEventDate] = useState(today);
   const [startTime, setStartTime] = useState("");
@@ -850,6 +850,20 @@ export default function EventsPage() {
                 </svg>
                 Salas
               </Link>
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  user?.permissions && logout();
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium border-l-4 border-transparent text-red-600 hover:bg-red-50 transition-colors border-t border-gray-200 mt-auto"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                Deslogar
+              </button>
             </nav>
           </div>
         </div>
