@@ -91,6 +91,18 @@ export default function HomePage() {
           quality={90}
           priority
         />
+        {/* Overlay com imagem da Igreja no mobile */}
+        <div className="absolute inset-0 lg:hidden">
+          <Image
+            src="/images/igreja.png"
+            alt="Igreja Batista Vida Abundante"
+            fill
+            className="object-cover opacity-60"
+            quality={90}
+          />
+          {/* Overlay gradiente no mobile */}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-600/30 to-purple-700/70" />
+        </div>
       </div>
 
       {/* Ícone da Igreja no topo (Mobile) */}
