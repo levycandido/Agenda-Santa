@@ -191,6 +191,7 @@ function NewEventModal({
 export default function EventsPage() {
   const today = todayIso();
   const { user } = useAuth();
+  const canCreate = user?.permissions.includes("EVENTS_CREATE");
   const [eventDate, setEventDate] = useState(today);
   const [startTime, setStartTime] = useState("");
   const [selectedUserName, setSelectedUserName] = useState("");
@@ -384,6 +385,10 @@ export default function EventsPage() {
   }
 
   async function handleCellClick(day: string, hour: string, roomId: string) {
+    if (!canCreate) {
+      showAlert("Você não tem permissão para criar ou editar eventos.");
+      return;
+    }
     if (!selectedUserName) {
       showAlert("Selecione uma pessoa antes de criar um evento.");
       return;
@@ -666,8 +671,10 @@ export default function EventsPage() {
                                 {hour}
                               </div>
                               <div
-                                onClick={() => handleCellClick(day, hour, selectedRoomId)}
-                                className="border-b border-gray-100 p-2 min-h-[64px] cursor-pointer hover:bg-gray-50 transition-colors"
+                                onClick={() => canCreate && handleCellClick(day, hour, selectedRoomId)}
+                                className={`border-b border-gray-100 p-2 min-h-[64px] transition-colors ${
+                                  canCreate ? "cursor-pointer hover:bg-gray-50" : "cursor-not-allowed opacity-60"
+                                }`}
                               >
                                 {cellEvents.map((ev) => EventCard({ ev, compact: false }))}
                               </div>
@@ -680,13 +687,15 @@ export default function EventsPage() {
                 </div>
 
                 {/* FAB */}
-                <button
-                  onClick={() => setModalOpen(true)}
-                  className="fixed bottom-[72px] right-4 w-14 h-14 bg-indigo-600 hover:bg-indigo-700 rounded-full shadow-xl flex items-center justify-center text-white text-3xl transition-colors z-40"
-                  aria-label="Novo evento"
-                >
-                  +
-                </button>
+                {canCreate && (
+                  <button
+                    onClick={() => setModalOpen(true)}
+                    className="fixed bottom-[72px] right-4 w-14 h-14 bg-indigo-600 hover:bg-indigo-700 rounded-full shadow-xl flex items-center justify-center text-white text-3xl transition-colors z-40"
+                    aria-label="Novo evento"
+                  >
+                    +
+                  </button>
+                )}
 
                 {/* Bottom navigation */}
                 <div className="shrink-0 bg-white border-t border-gray-200 flex items-center justify-around px-2 py-2 z-30">
@@ -774,8 +783,10 @@ export default function EventsPage() {
                                 return (
                                   <div
                                     key={`${day}-${hour}-${room.roomId}`}
-                                    onClick={() => handleCellClick(day, hour, room.roomId)}
-                                    className="border-b border-r border-gray-100 p-1 min-h-[56px] cursor-pointer hover:bg-gray-50 transition-colors"
+                                    onClick={() => canCreate && handleCellClick(day, hour, room.roomId)}
+                                    className={`border-b border-r border-gray-100 p-1 min-h-[56px] transition-colors ${
+                                      canCreate ? "cursor-pointer hover:bg-gray-50" : "cursor-not-allowed opacity-60"
+                                    }`}
                                   >
                                     {cellEvents.map((ev) => EventCard({ ev, compact: true }))}
                                   </div>

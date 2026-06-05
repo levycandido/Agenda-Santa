@@ -18,7 +18,6 @@ export default function UsersPage() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const canCreate = user?.permissions.includes("USERS_CREATE");
-  const isAdmin = user?.roles.includes("ADMIN");
 
   useEffect(() => {
     listUsers()
@@ -128,7 +127,7 @@ export default function UsersPage() {
                     <th className="text-left px-6 py-3 font-semibold text-gray-700">Nome</th>
                     <th className="text-left px-6 py-3 font-semibold text-gray-700">E-mail</th>
                     <th className="text-left px-6 py-3 font-semibold text-gray-700">Status</th>
-                    {isAdmin && (
+                    {canCreate && (
                       <th className="text-right px-6 py-3 font-semibold text-gray-700">Ações</th>
                     )}
                   </tr>
@@ -163,7 +162,7 @@ export default function UsersPage() {
                         </td>
 
                         {/* Ações */}
-                        {isAdmin && (
+                        {canCreate && (
                           <td className="px-6 py-4">
                             <div className="flex items-center justify-end gap-2">
                               <button

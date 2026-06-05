@@ -31,7 +31,6 @@ export default function RoomsPage() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const canCreate = user?.permissions.includes("ROOMS_CREATE");
-  const isAdmin = user?.roles.includes("ADMIN");
 
   useEffect(() => {
     listRooms()
@@ -167,7 +166,7 @@ export default function RoomsPage() {
                     </div>
 
                     {/* Actions */}
-                    {isAdmin && (
+                    {canCreate && (
                       <div className="flex items-center gap-2 shrink-0">
                         <button
                           onClick={() =>
