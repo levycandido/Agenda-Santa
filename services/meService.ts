@@ -3,7 +3,8 @@ export type MeResponse = {
   email: string;
   nome: string;
   roles: string[];
-  permissions: string[];
+  permissions?: string[];
+  permissoes?: string[];
 };
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL!;

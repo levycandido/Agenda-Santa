@@ -31,7 +31,6 @@ export default function RoomsPage() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const canCreate = user?.permissions.includes("ROOMS_CREATE");
-  const isAdmin = user?.roles.includes("ADMIN");
 
   useEffect(() => {
     listRooms()
@@ -66,8 +65,7 @@ export default function RoomsPage() {
 
   return (
     <Layout>
-      <RequirePermission permission={["ROOMS_VIEW", "ROOMS_CREATE"]}>
-        {/* Desktop layout */}
+      {/* Desktop layout */}
         <div className="hidden md:block">
           {/* Page header */}
           <div className="mb-6">
@@ -98,7 +96,7 @@ export default function RoomsPage() {
               {/* New room */}
               {canCreate && (
                 <button
-                  onClick={() => router.push("/rooms/new")}
+                  onClick={() => router.push("/sala/new")}
                   className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors font-medium whitespace-nowrap"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -167,11 +165,11 @@ export default function RoomsPage() {
                     </div>
 
                     {/* Actions */}
-                    {isAdmin && (
+                    {canCreate && (
                       <div className="flex items-center gap-2 shrink-0">
                         <button
                           onClick={() =>
-                            router.push(`/rooms/${r.roomId}/edit?name=${encodeURIComponent(r.name)}`)
+                            router.push(`/sala/${r.roomId}/edit?name=${encodeURIComponent(r.name)}`)
                           }
                           title="Alterar sala"
                           className="w-9 h-9 flex items-center justify-center rounded-lg border border-indigo-200 text-indigo-600 hover:bg-indigo-50 transition-colors"
@@ -238,10 +236,15 @@ export default function RoomsPage() {
                 return (
                   <button
                     key={r.roomId}
-                    onClick={() =>
-                      router.push(`/rooms/${r.roomId}/edit?name=${encodeURIComponent(r.name)}`)
-                    }
-                    className="text-left w-full bg-white rounded-lg flex items-center gap-3 px-4 py-3 border border-gray-100 hover:bg-gray-50 transition-colors"
+                    onClick={() => {
+                      if (canCreate) {
+                        router.push(`/sala/${r.roomId}/edit?name=${encodeURIComponent(r.name)}`);
+                      }
+                    }}
+                    disabled={!canCreate}
+                    className={`text-left w-full bg-white rounded-lg flex items-center gap-3 px-4 py-3 border border-gray-100 transition-colors ${
+                      canCreate ? "hover:bg-gray-50 cursor-pointer" : "cursor-not-allowed opacity-60"
+                    }`}
                   >
                     {/* Icon */}
                     <div
@@ -267,7 +270,6 @@ export default function RoomsPage() {
             </div>
           )}
         </div>
-      </RequirePermission>
 
       {pendingDelete && (
         <ConfirmDialog

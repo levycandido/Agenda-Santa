@@ -18,7 +18,6 @@ export default function UsersPage() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const canCreate = user?.permissions.includes("USERS_CREATE");
-  const isAdmin = user?.roles.includes("ADMIN");
 
   useEffect(() => {
     listUsers()
@@ -61,8 +60,7 @@ export default function UsersPage() {
 
   return (
     <Layout>
-      <RequirePermission permission={["USERS_VIEW", "USERS_CREATE"]}>
-        {/* Desktop layout */}
+      {/* Desktop layout */}
         <div className="hidden md:block">
           {/* Page header */}
           <div className="mb-6">
@@ -128,7 +126,7 @@ export default function UsersPage() {
                     <th className="text-left px-6 py-3 font-semibold text-gray-700">Nome</th>
                     <th className="text-left px-6 py-3 font-semibold text-gray-700">E-mail</th>
                     <th className="text-left px-6 py-3 font-semibold text-gray-700">Status</th>
-                    {isAdmin && (
+                    {canCreate && (
                       <th className="text-right px-6 py-3 font-semibold text-gray-700">Ações</th>
                     )}
                   </tr>
@@ -163,7 +161,7 @@ export default function UsersPage() {
                         </td>
 
                         {/* Ações */}
-                        {isAdmin && (
+                        {canCreate && (
                           <td className="px-6 py-4">
                             <div className="flex items-center justify-end gap-2">
                               <button
@@ -239,12 +237,17 @@ export default function UsersPage() {
                 return (
                   <button
                     key={u.userId}
-                    onClick={() =>
-                      router.push(
-                        `/users/${u.userId}/edit?cor=${encodeURIComponent(u.color || u.cor || "")}`
-                      )
-                    }
-                    className="text-left w-full bg-white rounded-lg flex items-center gap-3 px-4 py-3 border border-gray-100 hover:bg-gray-50 transition-colors"
+                    onClick={() => {
+                      if (canCreate) {
+                        router.push(
+                          `/users/${u.userId}/edit?cor=${encodeURIComponent(u.color || u.cor || "")}`
+                        );
+                      }
+                    }}
+                    disabled={!canCreate}
+                    className={`text-left w-full bg-white rounded-lg flex items-center gap-3 px-4 py-3 border border-gray-100 transition-colors ${
+                      canCreate ? "hover:bg-gray-50 cursor-pointer" : "cursor-not-allowed opacity-60"
+                    }`}
                   >
                     {/* Avatar */}
                     <div
@@ -270,7 +273,6 @@ export default function UsersPage() {
             </div>
           )}
         </div>
-      </RequirePermission>
 
       {pendingDelete && (
         <ConfirmDialog

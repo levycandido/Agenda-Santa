@@ -130,10 +130,10 @@ export function Menu() {
         )}
         {has("ROOMS_VIEW", "ROOMS_CREATE") && (
           <NavItem
-            href="/rooms"
+            href="/sala"
             icon={<DoorIcon />}
             label="Salas"
-            active={pathname?.startsWith("/rooms") ?? false}
+            active={pathname?.startsWith("/sala") ?? false}
           />
         )}
         <NavItem
@@ -144,6 +144,12 @@ export function Menu() {
         />
 
         <div className="mt-auto pt-3">
+          {user && (
+            <div className="border-t border-gray-100 pt-3 pb-3">
+              <p className="text-xs text-gray-500 px-4">Logado como:</p>
+              <p className="text-sm font-medium text-gray-900 px-4 truncate">{user.name}</p>
+            </div>
+          )}
           <div className="border-t border-gray-100 pt-2">
             <button
               onClick={logout}
@@ -152,7 +158,7 @@ export function Menu() {
               <span className="text-gray-400">
                 <LogoutIcon />
               </span>
-              Sair
+              Deslogar
             </button>
           </div>
         </div>

@@ -48,12 +48,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       const me = await getMe();
 
+      const rawPerms = me.permissions || me.permissoes || [];
+      const processedPermissions = (rawPerms as string[]).map((p) => p.replace(/^"|"$/g, "")) as Permission[];
+
       setUser({
         userId: me.userId || decoded.sub,
         email: me.email || decoded.email || "",
         name: me.nome || decoded.name || decoded.given_name || "",
         roles: me.roles || [],
-        permissions: ((me.permissions || []) as string[]).map((p) => p.replace(/^"|"$/g, "")) as Permission[],
+        permissions: processedPermissions,
       });
     } catch (error) {
       console.error(error);

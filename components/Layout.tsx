@@ -19,12 +19,12 @@ function getPageTitle(): { title: string; subtitle: string } {
   const pathname = usePathname();
   if (pathname === "/events") return { title: "Agenda", subtitle: "Visualize sua agenda" };
   if (pathname === "/users") return { title: "Usuários", subtitle: "Gerencie os colaboradores" };
-  if (pathname === "/rooms") return { title: "Salas", subtitle: "Gerencie as salas" };
+  if (pathname === "/sala") return { title: "Salas", subtitle: "Gerencie as salas" };
   return { title: "Agenda Santa", subtitle: "" };
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const pathname = usePathname();
   const { title, subtitle } = getPageTitle();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -71,7 +71,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <div className="p-4 border-b border-gray-200">
                 <h2 className="text-lg font-bold text-gray-900">Menu</h2>
               </div>
-              <nav className="flex-1 overflow-y-auto">
+              <nav className="overflow-y-auto">
                 <Link
                   href="/events"
                   onClick={() => setMobileMenuOpen(false)}
@@ -103,10 +103,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   Usuários
                 </Link>
                 <Link
-                  href="/rooms"
+                  href="/sala"
                   onClick={() => setMobileMenuOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 text-sm font-medium border-l-4 transition-colors ${
-                    pathname === "/rooms"
+                    pathname === "/sala"
                       ? "border-indigo-600 bg-indigo-50 text-indigo-600"
                       : "border-transparent text-gray-700 hover:bg-gray-50"
                   }`}
@@ -118,6 +118,26 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   Salas
                 </Link>
               </nav>
+              <div className="mt-auto flex flex-col">
+                <div className="border-t border-gray-200 px-4 py-3">
+                  <p className="text-xs text-gray-500 mb-1">Logado como:</p>
+                  <p className="text-sm font-medium text-gray-900">{user?.name || "[não carregado]"}</p>
+                </div>
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    logout();
+                  }}
+                  className="flex items-center gap-3 px-4 py-3 text-sm font-medium border-t border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors w-full"
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                  </svg>
+                  Deslogar
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -132,13 +152,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <span className="text-sm font-medium text-gray-700">
                 {user.name.split(" ").slice(0, 2).join(" ")}
               </span>
-              <svg className="w-4 h-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                <path
-                  fillRule="evenodd"
-                  d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                  clipRule="evenodd"
-                />
-              </svg>
             </div>
           )}
         </div>
@@ -166,12 +179,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
               Usuários
             </span>
           </Link>
-          <Link href="/rooms" className="flex flex-col items-center gap-0.5 px-3 py-2 text-gray-500 hover:text-indigo-600">
+          <Link href="/sala" className="flex flex-col items-center gap-0.5 px-3 py-2 text-gray-500 hover:text-indigo-600">
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <rect x="4" y="5" width="16" height="7" rx="2" /><rect x="2" y="10" width="4" height="7" rx="2" />
               <rect x="18" y="10" width="4" height="7" rx="2" /><rect x="4" y="13" width="16" height="4" rx="1" />
             </svg>
-            <span className={`text-xs ${pathname === "/rooms" ? "font-semibold text-indigo-600" : ""}`}>
+            <span className={`text-xs ${pathname === "/sala" ? "font-semibold text-indigo-600" : ""}`}>
               Salas
             </span>
           </Link>

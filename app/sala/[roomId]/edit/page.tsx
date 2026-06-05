@@ -44,7 +44,7 @@ export default function EditRoomPage() {
   useEffect(() => {
     getRoom(roomId)
       .then((r) => { if (r.name) setName(r.name); })
-      .catch(() => setDialog({ message: "Erro ao carregar sala.", onOk: () => router.push("/rooms") }))
+      .catch(() => setDialog({ message: "Erro ao carregar sala.", onOk: () => router.push("/sala") }))
       .finally(() => setLoadingData(false));
   }, [roomId]);
 
@@ -55,7 +55,7 @@ export default function EditRoomPage() {
       await updateRoom(roomId, { name });
       setDialog({
         message: "Sala alterada com sucesso!",
-        onOk: () => router.push("/rooms"),
+        onOk: () => router.push("/sala"),
       });
     } catch {
       setDialog({ message: "Erro ao alterar sala.", onOk: () => setDialog(null) });
@@ -74,7 +74,7 @@ export default function EditRoomPage() {
           await deleteRoom(roomId);
           setDialog({
             message: "Sala excluída com sucesso!",
-            onOk: () => router.push("/rooms"),
+            onOk: () => router.push("/sala"),
           });
         } catch {
           setDialog({ message: "Erro ao excluir sala.", onOk: () => setDialog(null) });
@@ -93,7 +93,7 @@ export default function EditRoomPage() {
           {/* Header */}
           <div className="flex items-center gap-3 mb-6">
             <button
-              onClick={() => router.push("/rooms")}
+              onClick={() => router.push("/sala")}
               className="p-2 rounded-lg bg-indigo-100 text-indigo-600 hover:bg-indigo-200 transition-colors"
               aria-label="Voltar"
             >
@@ -128,7 +128,7 @@ export default function EditRoomPage() {
                   <div className="flex gap-3 mt-2">
                     <button
                       type="button"
-                      onClick={() => router.push("/rooms")}
+                      onClick={() => router.push("/sala")}
                       className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-sm text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors font-medium"
                     >
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

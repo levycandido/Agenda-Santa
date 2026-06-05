@@ -16,6 +16,15 @@ const HOURS = Array.from({ length: 16 }, (_, i) => {
 
 const ROOM_COLORS = ["#6366f1", "#f59e0b", "#f43f5e", "#10b981", "#3b82f6", "#8b5cf6"];
 
+function getInitials(name: string): string {
+  return name
+    .split(" ")
+    .filter(Boolean)
+    .map((n) => n[0].toUpperCase())
+    .slice(0, 2)
+    .join("");
+}
+
 function localIso(date: Date): string {
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, "0");
@@ -190,7 +199,8 @@ function NewEventModal({
 
 export default function EventsPage() {
   const today = todayIso();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const canCreate = user?.permissions.includes("EVENTS_CREATE");
   const [eventDate, setEventDate] = useState(today);
   const [startTime, setStartTime] = useState("");
   const [selectedUserName, setSelectedUserName] = useState("");
@@ -205,6 +215,7 @@ export default function EventsPage() {
   const [mobileCollabOpen, setMobileCollabOpen] = useState(false);
   const [mobileCollabPos, setMobileCollabPos] = useState<{ top: number; left: number; width: number } | null>(null);
   const mobileCollabBtnRef = useRef<HTMLButtonElement>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   function openMobileCollab() {
     if (mobileCollabBtnRef.current) {
@@ -235,6 +246,7 @@ export default function EventsPage() {
   function showConfirm(message: string, onConfirm: () => void) {
     setDialog({ message, onOk: () => { setDialog(null); onConfirm(); }, onCancel: () => setDialog(null) });
   }
+
 
   useEffect(() => {
     if (!user) return;
@@ -372,6 +384,10 @@ export default function EventsPage() {
   }
 
   async function handleCellClick(day: string, hour: string, roomId: string) {
+    if (!canCreate) {
+      showAlert("Você não tem permissão para criar ou editar eventos.");
+      return;
+    }
     if (!selectedUserName) {
       showAlert("Selecione uma pessoa antes de criar um evento.");
       return;
@@ -442,7 +458,7 @@ export default function EventsPage() {
     );
 
     return (
-      <div className={stacked ? "flex flex-col gap-3" : "flex gap-6 flex-wrap items-end"}>
+      <div className={stacked ? "flex flex-col gap-3 items-center" : "flex gap-6 flex-wrap items-end justify-center"}>
         {/* Date */}
         <div className={stacked ? "w-full" : ""}>
           <div className="flex items-center gap-1.5 text-xs font-medium text-gray-500 mb-1.5">
@@ -542,8 +558,12 @@ export default function EventsPage() {
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
 
         {/* Mobile top bar */}
-        <div className="md:hidden bg-indigo-600 px-4 py-3 flex items-center justify-between shrink-0">
-          <button className="text-white p-1" aria-label="Menu">
+        <div className="md:hidden bg-indigo-600 px-4 py-3 flex items-center justify-between shrink-0 relative z-50">
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="text-white p-1 hover:bg-indigo-700 rounded transition-colors"
+            aria-label="Menu"
+          >
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
             </svg>
@@ -559,11 +579,24 @@ export default function EventsPage() {
           </button>
         </div>
 
+        {/* Desktop top bar */}
+        <div className="hidden md:flex shrink-0 bg-white border-b border-gray-200 px-6 py-3 items-center justify-end">
+          {user && (
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center text-white text-sm font-bold select-none">
+                {getInitials(user.name)}
+              </div>
+              <span className="text-sm font-medium text-gray-700">
+                {user.name.split(" ").slice(0, 2).join(" ")}
+              </span>
+            </div>
+          )}
+        </div>
+
         {/* Content */}
         <div className="flex-1 overflow-hidden">
-          <RequirePermission permission={["EVENTS_VIEW", "EVENTS_CREATE"]}>
-            <>
-              {/* ── MOBILE LAYOUT ── */}
+          <>
+            {/* ── MOBILE LAYOUT ── */}
               <div className="md:hidden h-full flex flex-col bg-[#f8f8fb]">
 
                 {/* Filters */}
@@ -650,8 +683,10 @@ export default function EventsPage() {
                                 {hour}
                               </div>
                               <div
-                                onClick={() => handleCellClick(day, hour, selectedRoomId)}
-                                className="border-b border-gray-100 p-2 min-h-[64px] cursor-pointer hover:bg-gray-50 transition-colors"
+                                onClick={() => canCreate && handleCellClick(day, hour, selectedRoomId)}
+                                className={`border-b border-gray-100 p-2 min-h-[64px] transition-colors ${
+                                  canCreate ? "cursor-pointer hover:bg-gray-50" : "cursor-not-allowed opacity-60"
+                                }`}
                               >
                                 {cellEvents.map((ev) => EventCard({ ev, compact: false }))}
                               </div>
@@ -664,13 +699,15 @@ export default function EventsPage() {
                 </div>
 
                 {/* FAB */}
-                <button
-                  onClick={() => setModalOpen(true)}
-                  className="fixed bottom-[72px] right-4 w-14 h-14 bg-indigo-600 hover:bg-indigo-700 rounded-full shadow-xl flex items-center justify-center text-white text-3xl transition-colors z-40"
-                  aria-label="Novo evento"
-                >
-                  +
-                </button>
+                {canCreate && (
+                  <button
+                    onClick={() => setModalOpen(true)}
+                    className="fixed bottom-[72px] right-4 w-14 h-14 bg-indigo-600 hover:bg-indigo-700 rounded-full shadow-xl flex items-center justify-center text-white text-3xl transition-colors z-40"
+                    aria-label="Novo evento"
+                  >
+                    +
+                  </button>
+                )}
 
                 {/* Bottom navigation */}
                 <div className="shrink-0 bg-white border-t border-gray-200 flex items-center justify-around px-2 py-2 z-30">
@@ -687,7 +724,7 @@ export default function EventsPage() {
                     </svg>
                     <span className="text-xs">Usuários</span>
                   </Link>
-                  <Link href="/rooms" className="flex flex-col items-center gap-0.5 px-3 py-1 text-gray-500">
+                  <Link href="/sala" className="flex flex-col items-center gap-0.5 px-3 py-1 text-gray-500">
                     <CouchIcon color="#6b7280" size={24} />
                     <span className="text-xs">Salas</span>
                   </Link>
@@ -758,8 +795,10 @@ export default function EventsPage() {
                                 return (
                                   <div
                                     key={`${day}-${hour}-${room.roomId}`}
-                                    onClick={() => handleCellClick(day, hour, room.roomId)}
-                                    className="border-b border-r border-gray-100 p-1 min-h-[56px] cursor-pointer hover:bg-gray-50 transition-colors"
+                                    onClick={() => canCreate && handleCellClick(day, hour, room.roomId)}
+                                    className={`border-b border-r border-gray-100 p-1 min-h-[56px] transition-colors ${
+                                      canCreate ? "cursor-pointer hover:bg-gray-50" : "cursor-not-allowed opacity-60"
+                                    }`}
                                   >
                                     {cellEvents.map((ev) => EventCard({ ev, compact: true }))}
                                   </div>
@@ -773,10 +812,79 @@ export default function EventsPage() {
                   </div>
                 </div>
               </div>
-            </>
-          </RequirePermission>
+          </>
         </div>
       </div>
+
+      {/* Mobile menu overlay */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 md:hidden">
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+          <div className="absolute top-0 left-0 w-64 h-screen bg-white shadow-lg flex flex-col">
+            <div className="p-4 border-b border-gray-200">
+              <h2 className="text-lg font-bold text-gray-900">Menu</h2>
+            </div>
+            <nav className="overflow-y-auto">
+              <Link
+                href="/events"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 text-sm font-medium border-l-4 border-indigo-600 bg-indigo-50 text-indigo-600"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                Agenda
+              </Link>
+              <Link
+                href="/users"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 text-sm font-medium border-l-4 border-transparent text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+                Usuários
+              </Link>
+              <Link
+                href="/sala"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 text-sm font-medium border-l-4 border-transparent text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <rect x="4" y="5" width="16" height="7" rx="2" /><rect x="2" y="10" width="4" height="7" rx="2" />
+                  <rect x="18" y="10" width="4" height="7" rx="2" /><rect x="4" y="13" width="16" height="4" rx="1" />
+                </svg>
+                Salas
+              </Link>
+            </nav>
+            <div className="mt-auto flex flex-col">
+              <div className="border-t border-gray-200 px-4 py-3">
+                <p className="text-xs text-gray-500 mb-1">Logado como:</p>
+                <p className="text-sm font-medium text-gray-900">{user?.name || "[não carregado]"}</p>
+              </div>
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  user?.permissions && logout();
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium border-l-4 border-transparent text-gray-600 hover:bg-gray-50 transition-colors border-t border-gray-200"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                Deslogar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {modalOpen && (
         <NewEventModal

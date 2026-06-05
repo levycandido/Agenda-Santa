@@ -40,7 +40,7 @@ export default function NewRoomPage() {
       await createRoom({ name });
       setDialog({
         message: "Sala cadastrada com sucesso!",
-        onOk: () => router.push("/rooms"),
+        onOk: () => router.push("/sala"),
       });
     } catch (err) {
       console.error(err);
@@ -56,7 +56,7 @@ export default function NewRoomPage() {
         <div className="max-w-md">
           <div className="flex items-center gap-3 mb-6">
             <button
-              onClick={() => router.push("/rooms")}
+              onClick={() => router.push("/sala")}
               className="text-gray-400 hover:text-gray-600 text-lg leading-none"
               aria-label="Voltar"
             >
@@ -79,7 +79,7 @@ export default function NewRoomPage() {
             <div className="flex gap-3 mt-2">
               <button
                 type="button"
-                onClick={() => router.push("/rooms")}
+                onClick={() => router.push("/sala")}
                 className="flex-1 border rounded px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
               >
                 Cancelar
