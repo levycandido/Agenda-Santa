@@ -50,7 +50,7 @@ const providers = [
     bg: "bg-[#1DA1F2] hover:bg-[#0d8bd9]",
     icon: (
       <svg viewBox="0 0 24 24" className="h-5 w-5 fill-white">
-        <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723 9.917 9.917 0 01-3.127 1.195 4.929 4.929 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.9 4.9 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.937 4.937 0 004.604 3.417 9.868 9.868 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.054 0 13.999-7.496 13.999-13.986 0-.209 0-.42-.015-.63a9.936 9.936 0 002.46-2.548l-.047-.02z" />
+        <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723 9.917 9.917 0 01-3.127 1.195 4.929 4.929 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.9 4.9 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.937 4.937 0 004.604 3.417a9.868 9.868 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.054 0 13.999-7.496 13.999-13.986 0-.209 0-.42-.015-.63a9.936 9.936 0 002.46-2.548l-.047-.02z" />
       </svg>
     ),
   },
@@ -66,6 +66,26 @@ const providers = [
   },
 ];
 
+function ChurchIcon() {
+  return (
+    <svg viewBox="0 0 100 120" className="w-24 h-24" fill="none">
+      {/* Cruz no topo */}
+      <line x1="50" y1="10" x2="50" y2="30" stroke="white" strokeWidth="4" />
+      <line x1="40" y1="18" x2="60" y2="18" stroke="white" strokeWidth="4" />
+      {/* Casa/Igreja */}
+      <path d="M 20 45 L 50 25 L 80 45" stroke="white" strokeWidth="4" fill="none" />
+      <rect x="25" y="45" width="50" height="55" stroke="white" strokeWidth="4" fill="none" />
+      {/* Porta */}
+      <rect x="42" y="70" width="16" height="30" stroke="white" strokeWidth="3" fill="none" />
+      {/* Coração na porta */}
+      <path
+        d="M 50 78 C 48 76 45 76 44 78 C 43 79 43 81 50 87 C 57 81 57 79 56 78 C 55 76 52 76 50 78"
+        fill="white"
+      />
+    </svg>
+  );
+}
+
 export default function HomePage() {
   const { user, loading } = useAuth();
   const router = useRouter();
@@ -79,29 +99,71 @@ export default function HomePage() {
   if (loading || user) return null;
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="w-full max-w-sm rounded-xl bg-white p-8 shadow-lg">
-        <h1 className="mb-1 text-center text-2xl font-bold text-gray-800">
-          Agenda Santa
-        </h1>
-        <p className="mb-6 text-center text-xs text-gray-400">
-          Igreja Batista Vida Abundante
-        </p>
-        <p className="mb-6 text-center text-sm text-gray-500">
-          Escolha como deseja entrar
-        </p>
+    <div className="flex min-h-screen">
+      {/* Coluna esquerda - Desktop only */}
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-indigo-600 via-purple-600 to-indigo-700 flex-col items-center justify-center p-12 relative overflow-hidden">
+        {/* Decoração de background */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full" />
+          <div className="absolute bottom-20 right-10 w-48 h-48 bg-white rounded-full" />
+        </div>
 
-        <div className="flex flex-col gap-3">
-          {providers.map((p) => (
-            <button
-              key={p.id}
-              onClick={() => loginWithProvider(p.id)}
-              className={`flex items-center gap-3 rounded px-4 py-3 text-sm font-semibold text-white transition-colors ${p.bg}`}
-            >
-              {p.icon}
-              {p.label}
-            </button>
-          ))}
+        <div className="relative z-10 text-center">
+          <ChurchIcon />
+          <blockquote className="mt-12 text-white">
+            <p className="text-lg font-medium">Servindo a Deus,</p>
+            <p className="text-lg font-medium">transformando vidas.</p>
+            <footer className="mt-4 text-sm text-indigo-100">Mateus 28:19-20</footer>
+          </blockquote>
+        </div>
+      </div>
+
+      {/* Coluna direita - Card de login */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 bg-gray-50">
+        <div className="w-full max-w-md">
+          <div className="bg-white rounded-2xl shadow-lg p-8">
+            {/* Header */}
+            <div className="text-center mb-8">
+              <h1 className="text-3xl font-bold text-gray-900">Agenda Santa</h1>
+              <p className="text-base text-indigo-600 mt-1">Igreja Batista Vida Abundante</p>
+
+              {/* Decoração de coração */}
+              <div className="flex items-center justify-center gap-3 my-6">
+                <div className="flex-1 h-px bg-gray-300" />
+                <svg className="w-6 h-6 text-red-400" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                </svg>
+                <div className="flex-1 h-px bg-gray-300" />
+              </div>
+            </div>
+
+            {/* Subtitle */}
+            <p className="text-center text-gray-600 text-sm mb-8">Acesse sua conta para continuar</p>
+
+            {/* Login buttons */}
+            <div className="space-y-3">
+              {providers.map((p) => (
+                <button
+                  key={p.id}
+                  onClick={() => loginWithProvider(p.id)}
+                  className={`w-full flex items-center justify-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold text-white transition-colors ${p.bg}`}
+                >
+                  {p.icon}
+                  {p.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Footer */}
+            <div className="mt-8 pt-6 border-t border-gray-200">
+              <div className="flex items-center justify-center gap-2 text-xs text-gray-600">
+                <svg className="w-4 h-4 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" strokeWidth="2" />
+                </svg>
+                Seus dados estão protegidos conosco.
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
