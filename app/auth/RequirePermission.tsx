@@ -15,6 +15,10 @@ export function RequirePermission({ permission, children }: Props) {
     return null;
   }
 
+  if (!user) {
+    return null;
+  }
+
   const permissions = Array.isArray(permission) ? permission : [permission];
   const hasAccess = permissions.some((p) => user.permissions.includes(p));
 
