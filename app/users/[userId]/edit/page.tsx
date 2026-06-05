@@ -7,7 +7,7 @@ import { RequirePermission } from "@/app/auth/RequirePermission";
 import { getUser, updateUser, markUserDeactivated } from "@/services/userListService";
 import { deleteFutureUserEvents } from "@/services/eventService";
 
-const ALL_ROLES = ["ADMIN", "COLABORADOR", "MUSICO", "VISUALIZADOR"];
+const PROFILE_OPTIONS = ["ADMIN", "COLABORADOR"];
 
 const PALETTE = [
   "#fecaca", "#fed7aa", "#fef08a", "#d9f99d", "#bbf7d0",
@@ -106,7 +106,7 @@ export default function EditUserPage() {
 
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
-  const [roles, setRoles] = useState<string[]>([]);
+  const [role, setRole] = useState<string>("");
   const [color, setColor] = useState(corFromList);
   const [loadingData, setLoadingData] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -117,7 +117,7 @@ export default function EditUserPage() {
       .then((u) => {
         setNome(u.nome || u.name || "");
         setEmail(u.email);
-        setRoles(u.roles || []);
+        setRole(u.roles?.[0] || "");
         const apiColor = u.cor || u.color;
         if (apiColor) setColor(apiColor);
       })
@@ -125,21 +125,15 @@ export default function EditUserPage() {
       .finally(() => setLoadingData(false));
   }, [userId]);
 
-  function toggleRole(role: string) {
-    setRoles((prev) =>
-      prev.includes(role) ? prev.filter((x) => x !== role) : [...prev, role]
-    );
-  }
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (roles.length === 0) {
-      setDialog({ message: "Selecione ao menos um perfil.", onOk: () => setDialog(null) });
+    if (!role) {
+      setDialog({ message: "Selecione um perfil.", onOk: () => setDialog(null) });
       return;
     }
     try {
       setSaving(true);
-      await updateUser(userId, { nome, email, roles, cor: color });
+      await updateUser(userId, { nome, email, roles: [role], cor: color });
       setDialog({
         message: "Usuário alterado com sucesso!",
         onOk: () => router.push("/users"),
@@ -162,7 +156,7 @@ export default function EditUserPage() {
           await updateUser(userId, {
             nome,
             email,
-            roles,
+            roles: role ? [role] : [],
             cor: color,
             status: "DISABLED",
             updatedAt: new Date().toISOString(),
@@ -238,17 +232,19 @@ export default function EditUserPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2 text-gray-700">Perfis</label>
+                    <label className="block text-sm font-medium mb-2 text-gray-700">Perfil</label>
                     <div className="flex flex-col gap-2">
-                      {ALL_ROLES.map((role) => (
-                        <label key={role} className="flex items-center gap-2 text-sm text-gray-800 cursor-pointer hover:bg-gray-50 px-2 py-1.5 rounded">
+                      {PROFILE_OPTIONS.map((option) => (
+                        <label key={option} className="flex items-center gap-2 text-sm text-gray-800 cursor-pointer hover:bg-gray-50 px-2 py-1.5 rounded">
                           <input
-                            type="checkbox"
-                            checked={roles.includes(role)}
-                            onChange={() => toggleRole(role)}
-                            className="rounded border-gray-300"
+                            type="radio"
+                            name="profile"
+                            value={option}
+                            checked={role === option}
+                            onChange={(e) => setRole(e.target.value)}
+                            className="rounded-full border-gray-300"
                           />
-                          {role}
+                          {option}
                         </label>
                       ))}
                     </div>
