@@ -66,22 +66,73 @@ const providers = [
   },
 ];
 
-function ChurchIcon() {
+function ChurchIllustration() {
   return (
-    <svg viewBox="0 0 100 120" className="w-24 h-24" fill="none">
-      {/* Cruz no topo */}
-      <line x1="50" y1="10" x2="50" y2="30" stroke="white" strokeWidth="4" />
-      <line x1="40" y1="18" x2="60" y2="18" stroke="white" strokeWidth="4" />
-      {/* Casa/Igreja */}
-      <path d="M 20 45 L 50 25 L 80 45" stroke="white" strokeWidth="4" fill="none" />
-      <rect x="25" y="45" width="50" height="55" stroke="white" strokeWidth="4" fill="none" />
-      {/* Porta */}
-      <rect x="42" y="70" width="16" height="30" stroke="white" strokeWidth="3" fill="none" />
-      {/* Coração na porta */}
-      <path
-        d="M 50 78 C 48 76 45 76 44 78 C 43 79 43 81 50 87 C 57 81 57 79 56 78 C 55 76 52 76 50 78"
-        fill="white"
-      />
+    <svg viewBox="0 0 200 280" className="w-full h-full" fill="none">
+      {/* Céu com gradiente efeito */}
+      <defs>
+        <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="rgba(255,255,255,0.1)" />
+          <stop offset="100%" stopColor="rgba(0,0,0,0.2)" />
+        </linearGradient>
+      </defs>
+
+      {/* Ícone da igreja no topo */}
+      <g transform="translate(100, 30)">
+        {/* Cruz */}
+        <line x1="0" y1="-15" x2="0" y2="5" stroke="white" strokeWidth="3" />
+        <line x1="-8" y1="-5" x2="8" y2="-5" stroke="white" strokeWidth="3" />
+        {/* Casa */}
+        <path d="M -20 5 L 0 -15 L 20 5" stroke="white" strokeWidth="3" fill="none" />
+        <rect x="-20" y="5" width="40" height="30" stroke="white" strokeWidth="3" fill="none" />
+        {/* Porta com coração */}
+        <rect x="-8" y="15" width="16" height="20" stroke="white" strokeWidth="2" fill="none" />
+        <path
+          d="M 0 20 C -2 18 -5 18 -6 20 C -7 21 -7 23 0 29 C 7 23 7 21 6 20 C 5 18 2 18 0 20"
+          fill="white"
+        />
+      </g>
+
+      {/* Ilustração da Igreja/Casa no meio */}
+      <g transform="translate(0, 100)">
+        {/* Telhado */}
+        <path d="M 30 20 L 100 0 L 170 20" stroke="white" strokeWidth="2" fill="rgba(255,255,255,0.05)" />
+
+        {/* Parede principal */}
+        <rect x="30" y="20" width="140" height="120" stroke="white" strokeWidth="2" fill="rgba(255,255,255,0.03)" />
+
+        {/* Janelas esquerda */}
+        <rect x="50" y="40" width="20" height="20" stroke="white" strokeWidth="1.5" fill="none" />
+        <line x1="60" y1="40" x2="60" y2="60" stroke="white" strokeWidth="1" />
+        <line x1="50" y1="50" x2="70" y2="50" stroke="white" strokeWidth="1" />
+
+        <rect x="50" y="75" width="20" height="20" stroke="white" strokeWidth="1.5" fill="none" />
+        <line x1="60" y1="75" x2="60" y2="95" stroke="white" strokeWidth="1" />
+        <line x1="50" y1="85" x2="70" y2="85" stroke="white" strokeWidth="1" />
+
+        {/* Janelas direita */}
+        <rect x="130" y="40" width="20" height="20" stroke="white" strokeWidth="1.5" fill="none" />
+        <line x1="140" y1="40" x2="140" y2="60" stroke="white" strokeWidth="1" />
+        <line x1="130" y1="50" x2="150" y2="50" stroke="white" strokeWidth="1" />
+
+        <rect x="130" y="75" width="20" height="20" stroke="white" strokeWidth="1.5" fill="none" />
+        <line x1="140" y1="75" x2="140" y2="95" stroke="white" strokeWidth="1" />
+        <line x1="130" y1="85" x2="150" y2="85" stroke="white" strokeWidth="1" />
+
+        {/* Porta grande no centro */}
+        <rect x="80" y="90" width="40" height="50" stroke="white" strokeWidth="2" fill="rgba(255,255,255,0.02)" />
+        <rect x="85" y="95" width="30" height="40" stroke="white" strokeWidth="1.5" fill="none" />
+
+        {/* Maçaneta */}
+        <circle cx="112" cy="115" r="2" fill="white" />
+
+        {/* Degraus */}
+        <line x1="75" y1="140" x2="125" y2="140" stroke="white" strokeWidth="1" />
+        <line x1="70" y1="147" x2="130" y2="147" stroke="white" strokeWidth="1" />
+      </g>
+
+      {/* Efeito de padrão/textura */}
+      <rect x="0" y="0" width="200" height="280" fill="url(#skyGradient)" />
     </svg>
   );
 }
@@ -101,44 +152,51 @@ export default function HomePage() {
   return (
     <div className="flex min-h-screen">
       {/* Coluna esquerda - Desktop only */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-indigo-600 via-purple-600 to-indigo-700 flex-col items-center justify-center p-12 relative overflow-hidden">
-        {/* Decoração de background */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full" />
-          <div className="absolute bottom-20 right-10 w-48 h-48 bg-white rounded-full" />
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-b from-indigo-600 via-purple-600 to-purple-700 flex-col items-center justify-between p-12 relative overflow-hidden">
+        {/* Ilustração da Igreja */}
+        <div className="absolute inset-0">
+          <ChurchIllustration />
         </div>
 
-        <div className="relative z-10 text-center">
-          <ChurchIcon />
-          <blockquote className="mt-12 text-white">
-            <p className="text-lg font-medium">Servindo a Deus,</p>
-            <p className="text-lg font-medium">transformando vidas.</p>
-            <footer className="mt-4 text-sm text-indigo-100">Mateus 28:19-20</footer>
-          </blockquote>
+        {/* Conteúdo relativo */}
+        <div className="relative z-10 flex-1 flex flex-col items-center justify-center">
+          <div className="mt-20" />
         </div>
+
+        {/* Citação no rodapé */}
+        <blockquote className="relative z-10 text-center mb-12">
+          <div className="flex items-center justify-center mb-4">
+            <svg className="w-6 h-6 text-white/40" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M3 21c3 0 7-1 7-8V5c0-1.25-4.716-5-7-5-2.25 0-7 3.75-7 5c0 4 3.456 7 6 9.5 0 0-3 1.5-3 4.5S0 21 3 21z" />
+            </svg>
+          </div>
+          <p className="text-white text-lg font-medium leading-relaxed">Servindo a Deus,</p>
+          <p className="text-white text-lg font-medium leading-relaxed">transformando vidas.</p>
+          <footer className="mt-4 text-sm text-indigo-100">Mateus 28:19-20</footer>
+        </blockquote>
       </div>
 
       {/* Coluna direita - Card de login */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 bg-gray-50">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 bg-gradient-to-br from-slate-50 to-slate-100">
         <div className="w-full max-w-md">
-          <div className="bg-white rounded-2xl shadow-lg p-8">
+          <div className="bg-white rounded-3xl shadow-2xl p-8 lg:p-10">
             {/* Header */}
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-gray-900">Agenda Santa</h1>
-              <p className="text-base text-indigo-600 mt-1">Igreja Batista Vida Abundante</p>
+              <h1 className="text-4xl font-bold text-slate-900">Agenda Santa</h1>
+              <p className="text-lg text-indigo-600 mt-2 font-medium">Igreja Batista Vida Abundante</p>
 
               {/* Decoração de coração */}
-              <div className="flex items-center justify-center gap-3 my-6">
-                <div className="flex-1 h-px bg-gray-300" />
-                <svg className="w-6 h-6 text-red-400" viewBox="0 0 24 24" fill="currentColor">
+              <div className="flex items-center justify-center gap-3 my-8">
+                <div className="flex-1 h-px bg-slate-300" />
+                <svg className="w-6 h-6 text-indigo-400" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                 </svg>
-                <div className="flex-1 h-px bg-gray-300" />
+                <div className="flex-1 h-px bg-slate-300" />
               </div>
             </div>
 
             {/* Subtitle */}
-            <p className="text-center text-gray-600 text-sm mb-8">Acesse sua conta para continuar</p>
+            <p className="text-center text-slate-600 text-sm mb-8 font-medium">Acesse sua conta para continuar</p>
 
             {/* Login buttons */}
             <div className="space-y-3">
@@ -146,7 +204,7 @@ export default function HomePage() {
                 <button
                   key={p.id}
                   onClick={() => loginWithProvider(p.id)}
-                  className={`w-full flex items-center justify-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold text-white transition-colors ${p.bg}`}
+                  className={`w-full flex items-center justify-center gap-3 rounded-xl px-4 py-3.5 text-sm font-semibold text-white transition-all hover:shadow-lg ${p.bg}`}
                 >
                   {p.icon}
                   {p.label}
@@ -155,10 +213,10 @@ export default function HomePage() {
             </div>
 
             {/* Footer */}
-            <div className="mt-8 pt-6 border-t border-gray-200">
-              <div className="flex items-center justify-center gap-2 text-xs text-gray-600">
-                <svg className="w-4 h-4 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" strokeWidth="2" />
+            <div className="mt-8 pt-6 border-t border-slate-200">
+              <div className="flex items-center justify-center gap-2 text-xs text-slate-600">
+                <svg className="w-4 h-4 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 </svg>
                 Seus dados estão protegidos conosco.
               </div>
