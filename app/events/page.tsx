@@ -238,6 +238,17 @@ export default function EventsPage() {
   }
 
   useEffect(() => {
+    if (user) {
+      console.log("Usuário logado na tela de eventos:", {
+        id: user.userId,
+        nome: user.name,
+        email: user.email,
+        perfis: user.roles,
+      });
+    }
+  }, [user]);
+
+  useEffect(() => {
     if (!user) return;
     listRooms().then(setRooms).catch(console.error);
     listUsers().then(async (loaded) => {
