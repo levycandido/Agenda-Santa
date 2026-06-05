@@ -202,8 +202,8 @@ export default function EditUserPage() {
             <p className="text-gray-500 text-sm text-center py-6">Carregando...</p>
           ) : (
             <>
-              <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 mb-4">
-                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-4">
+                <form onSubmit={handleSubmit} className="flex flex-col gap-5">
                   <div>
                     <label className="block text-sm font-medium mb-2 text-gray-700">Nome</label>
                     <input
@@ -226,27 +226,31 @@ export default function EditUserPage() {
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium mb-2 text-gray-700">Cor</label>
-                    <ColorPicker value={color} onChange={setColor} />
-                  </div>
+                  <div className="grid grid-cols-2 gap-5">
+                    <div>
+                      <label className="block text-sm font-medium mb-2 text-gray-700">Perfil</label>
+                      <div className="flex flex-col gap-2">
+                        {PROFILE_OPTIONS.map((option) => (
+                          <label key={option} className="flex items-center gap-2 text-sm text-gray-800 cursor-pointer hover:bg-gray-50 px-2 py-1.5 rounded">
+                            <input
+                              type="radio"
+                              name="profile"
+                              value={option}
+                              checked={role === option}
+                              onChange={(e) => setRole(e.target.value)}
+                              className="rounded-full border-gray-300"
+                            />
+                            {option}
+                          </label>
+                        ))}
+                      </div>
+                    </div>
 
-                  <div>
-                    <label className="block text-sm font-medium mb-2 text-gray-700">Perfil</label>
-                    <div className="flex flex-col gap-2">
-                      {PROFILE_OPTIONS.map((option) => (
-                        <label key={option} className="flex items-center gap-2 text-sm text-gray-800 cursor-pointer hover:bg-gray-50 px-2 py-1.5 rounded">
-                          <input
-                            type="radio"
-                            name="profile"
-                            value={option}
-                            checked={role === option}
-                            onChange={(e) => setRole(e.target.value)}
-                            className="rounded-full border-gray-300"
-                          />
-                          {option}
-                        </label>
-                      ))}
+                    <div>
+                      <label className="block text-sm font-medium mb-2 text-gray-700">Cor</label>
+                      <div className="flex items-center">
+                        <ColorPicker value={color} onChange={setColor} />
+                      </div>
                     </div>
                   </div>
 

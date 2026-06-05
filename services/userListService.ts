@@ -178,7 +178,7 @@ export async function createUser(data: CreateUserInput): Promise<UserSummary> {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ ...data, status: "ACTIVATED" }),
+    body: JSON.stringify({ ...data, status: "ACTIVED" }),
   });
 
   if (!response.ok) {

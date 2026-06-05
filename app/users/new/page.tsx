@@ -6,7 +6,7 @@ import { Layout } from "@/components/Layout";
 import { RequirePermission } from "@/app/auth/RequirePermission";
 import { createUser } from "@/services/userListService";
 
-const ALL_ROLES = ["ADMIN", "COLABORADOR", "MUSICO", "VISUALIZADOR"];
+const PROFILE_OPTIONS = ["ADMIN", "COLABORADOR"];
 
 const PALETTE = [
   "#fecaca", "#fed7aa", "#fef08a", "#d9f99d", "#bbf7d0",
@@ -95,26 +95,20 @@ export default function NewUserPage() {
   const router = useRouter();
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
-  const [roles, setRoles] = useState<string[]>([]);
+  const [role, setRole] = useState<string>("");
   const [color, setColor] = useState("#6366f1");
   const [loading, setLoading] = useState(false);
   const [dialog, setDialog] = useState<DialogState>(null);
 
-  function toggleRole(role: string) {
-    setRoles((prev) =>
-      prev.includes(role) ? prev.filter((x) => x !== role) : [...prev, role]
-    );
-  }
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (roles.length === 0) {
-      setDialog({ message: "Selecione ao menos um perfil.", onOk: () => setDialog(null) });
+    if (!role) {
+      setDialog({ message: "Selecione um perfil.", onOk: () => setDialog(null) });
       return;
     }
     try {
       setLoading(true);
-      await createUser({ nome, email, roles, cor: color });
+      await createUser({ nome, email, roles: [role], cor: color });
       setDialog({
         message: "Usuário cadastrado com sucesso!",
         onOk: () => router.push("/users"),
@@ -130,82 +124,101 @@ export default function NewUserPage() {
   return (
     <Layout>
       <RequirePermission permission="USERS_CREATE">
-        <div className="max-w-md">
+        <div className="max-w-md mx-auto">
+          {/* Header */}
           <div className="flex items-center gap-3 mb-6">
             <button
               onClick={() => router.push("/users")}
-              className="text-gray-400 hover:text-gray-600 text-lg leading-none"
+              className="p-2 rounded-lg bg-indigo-100 text-indigo-600 hover:bg-indigo-200 transition-colors"
               aria-label="Voltar"
             >
-              ←
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
             </button>
-            <h1 className="text-2xl font-bold">Novo Usuário</h1>
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Novo Usuário</h1>
+              <p className="text-sm text-gray-500 mt-0.5">Crie um novo usuário na plataforma.</p>
+            </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1 text-gray-700">Nome</label>
-              <input
-                type="text"
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
-                required
-                placeholder="ex: Cláudia"
-                className="border rounded px-3 py-2 w-full text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1 text-gray-700">E-mail</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder="ex: claudia@email.com"
-                className="border rounded px-3 py-2 w-full text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1 text-gray-700">Cor</label>
-              <ColorPicker value={color} onChange={setColor} />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2 text-gray-700">Perfis (Roles)</label>
-              <div className="flex flex-col gap-2">
-                {ALL_ROLES.map((role) => (
-                  <label key={role} className="flex items-center gap-2 text-sm text-gray-800 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={roles.includes(role)}
-                      onChange={() => toggleRole(role)}
-                      className="rounded"
-                    />
-                    {role}
-                  </label>
-                ))}
+          {/* Form */}
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-4">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+              <div>
+                <label className="block text-sm font-medium mb-2 text-gray-700">Nome</label>
+                <input
+                  type="text"
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                  required
+                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-gray-900"
+                />
               </div>
-            </div>
 
-            <div className="flex gap-3 mt-2">
-              <button
-                type="button"
-                onClick={() => router.push("/users")}
-                className="flex-1 border rounded px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-              >
-                Cancelar
-              </button>
-              <button
-                type="submit"
-                disabled={loading}
-                className="flex-1 bg-blue-600 text-white rounded px-4 py-2 text-sm hover:bg-blue-700 disabled:opacity-60"
-              >
-                {loading ? "Salvando..." : "Cadastrar"}
-              </button>
-            </div>
-          </form>
+              <div>
+                <label className="block text-sm font-medium mb-2 text-gray-700">E-mail</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white text-gray-900"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-gray-700">Perfil</label>
+                  <div className="flex flex-col gap-2">
+                    {PROFILE_OPTIONS.map((option) => (
+                      <label key={option} className="flex items-center gap-2 text-sm text-gray-800 cursor-pointer hover:bg-gray-50 px-2 py-1.5 rounded">
+                        <input
+                          type="radio"
+                          name="profile"
+                          value={option}
+                          checked={role === option}
+                          onChange={(e) => setRole(e.target.value)}
+                          className="rounded-full border-gray-300"
+                        />
+                        {option}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-gray-700">Cor</label>
+                  <div className="flex items-center">
+                    <ColorPicker value={color} onChange={setColor} />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex gap-3 mt-2">
+                <button
+                  type="button"
+                  onClick={() => router.push("/users")}
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-sm text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-sm text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors font-medium disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  {loading ? "Salvando..." : "Cadastrar"}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
 
         {dialog && <AppDialog {...dialog} />}
