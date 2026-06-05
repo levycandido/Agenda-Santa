@@ -118,12 +118,19 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   Salas
                 </Link>
               </nav>
-              {user && (
-                <div className="border-t border-gray-200 px-4 py-3">
-                  <p className="text-xs text-gray-500">Logado como:</p>
-                  <p className="text-sm font-medium text-gray-900 truncate">{user.name}</p>
-                </div>
-              )}
+              <div className="mt-auto">
+                {user && (
+                  <div className="border-t border-gray-200 px-4 py-3 flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white text-xs font-bold">
+                      {getInitials(user.name)}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs text-gray-500">Logado como:</p>
+                      <p className="text-sm font-medium text-gray-900 truncate">{user.name}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
