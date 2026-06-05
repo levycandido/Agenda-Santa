@@ -48,11 +48,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       const me = await getMe();
       console.log("DEBUG AuthContext - me:", me);
-      console.log("DEBUG AuthContext - me.permissions bruto:", me.permissions);
+      console.log("DEBUG AuthContext - me.permissions:", me.permissions);
+      console.log("DEBUG AuthContext - me.permissoes:", me.permissoes);
 
-      const processedPermissions = ((me.permissions || []) as string[]).map((p) => {
+      const rawPerms = me.permissions || me.permissoes || [];
+      console.log("DEBUG AuthContext - rawPerms escolhidas:", rawPerms);
+
+      const processedPermissions = (rawPerms as string[]).map((p) => {
         const cleaned = p.replace(/^"|"$/g, "");
-        console.log(`DEBUG AuthContext - Permissão bruta: "${p}" → cleaned: "${cleaned}"`);
+        console.log(`DEBUG AuthContext - Permissão: "${p}" → cleaned: "${cleaned}"`);
         return cleaned;
       }) as Permission[];
 
