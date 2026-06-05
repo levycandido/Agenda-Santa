@@ -147,12 +147,12 @@ export function Menu() {
           <div className="border-t border-gray-100 pt-2">
             <button
               onClick={logout}
-              className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+              className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors"
             >
-              <span className="text-gray-400">
+              <span className="text-red-400">
                 <LogoutIcon />
               </span>
-              Sair
+              Deslogar
             </button>
           </div>
         </div>
