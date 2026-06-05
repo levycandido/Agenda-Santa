@@ -192,7 +192,6 @@ export default function EventsPage() {
   const today = todayIso();
   const { user, logout } = useAuth();
   const canCreate = user?.permissions.includes("EVENTS_CREATE");
-  console.log("DEBUG EventsPage render - user:", user, "canCreate:", canCreate);
   const [eventDate, setEventDate] = useState(today);
   const [startTime, setStartTime] = useState("");
   const [selectedUserName, setSelectedUserName] = useState("");
@@ -239,20 +238,6 @@ export default function EventsPage() {
     setDialog({ message, onOk: () => { setDialog(null); onConfirm(); }, onCancel: () => setDialog(null) });
   }
 
-  useEffect(() => {
-    if (user) {
-      console.log("Usuário logado na tela de eventos:", {
-        id: user.userId,
-        nome: user.name,
-        email: user.email,
-        perfis: user.roles,
-        permissoes: user.permissions,
-        temEVENTS_VIEW: user.permissions.includes("EVENTS_VIEW"),
-        temEVENTS_CREATE: user.permissions.includes("EVENTS_CREATE"),
-        canCreate: canCreate,
-      });
-    }
-  }, [user, canCreate]);
 
   useEffect(() => {
     if (!user) return;
@@ -390,14 +375,11 @@ export default function EventsPage() {
   }
 
   async function handleCellClick(day: string, hour: string, roomId: string) {
-    console.log("handleCellClick chamado:", { day, hour, roomId, canCreate, selectedUserName });
     if (!canCreate) {
-      console.log("Sem permissão EVENTS_CREATE", { canCreate });
       showAlert("Você não tem permissão para criar ou editar eventos.");
       return;
     }
     if (!selectedUserName) {
-      console.log("Sem usuário selecionado", { selectedUserName });
       showAlert("Selecione uma pessoa antes de criar um evento.");
       return;
     }

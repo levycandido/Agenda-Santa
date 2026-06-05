@@ -47,31 +47,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       const me = await getMe();
-      console.log("DEBUG AuthContext - me:", me);
-      console.log("DEBUG AuthContext - me.permissions:", me.permissions);
-      console.log("DEBUG AuthContext - me.permissoes:", me.permissoes);
 
       const rawPerms = me.permissions || me.permissoes || [];
-      console.log("DEBUG AuthContext - rawPerms escolhidas:", rawPerms);
+      const processedPermissions = (rawPerms as string[]).map((p) => p.replace(/^"|"$/g, "")) as Permission[];
 
-      const processedPermissions = (rawPerms as string[]).map((p) => {
-        const cleaned = p.replace(/^"|"$/g, "");
-        console.log(`DEBUG AuthContext - Permissão: "${p}" → cleaned: "${cleaned}"`);
-        return cleaned;
-      }) as Permission[];
-
-      console.log("DEBUG AuthContext - Permissões processadas:", processedPermissions);
-
-      const newUser = {
+      setUser({
         userId: me.userId || decoded.sub,
         email: me.email || decoded.email || "",
         name: me.nome || decoded.name || decoded.given_name || "",
         roles: me.roles || [],
         permissions: processedPermissions,
-      };
-
-      console.log("DEBUG AuthContext - User object final:", newUser);
-      setUser(newUser);
+      });
     } catch (error) {
       console.error(error);
       setUser(null);
