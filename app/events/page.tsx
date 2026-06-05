@@ -16,6 +16,15 @@ const HOURS = Array.from({ length: 16 }, (_, i) => {
 
 const ROOM_COLORS = ["#6366f1", "#f59e0b", "#f43f5e", "#10b981", "#3b82f6", "#8b5cf6"];
 
+function getInitials(name: string): string {
+  return name
+    .split(" ")
+    .filter(Boolean)
+    .map((n) => n[0].toUpperCase())
+    .slice(0, 2)
+    .join("");
+}
+
 function localIso(date: Date): string {
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, "0");
@@ -449,7 +458,7 @@ export default function EventsPage() {
     );
 
     return (
-      <div className={stacked ? "flex flex-col gap-3" : "flex gap-6 flex-wrap items-end"}>
+      <div className={stacked ? "flex flex-col gap-3 items-center" : "flex gap-6 flex-wrap items-end justify-center"}>
         {/* Date */}
         <div className={stacked ? "w-full" : ""}>
           <div className="flex items-center gap-1.5 text-xs font-medium text-gray-500 mb-1.5">
@@ -568,6 +577,20 @@ export default function EventsPage() {
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" />
             </svg>
           </button>
+        </div>
+
+        {/* Desktop top bar */}
+        <div className="hidden md:flex shrink-0 bg-white border-b border-gray-200 px-6 py-3 items-center justify-end">
+          {user && (
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center text-white text-sm font-bold select-none">
+                {getInitials(user.name)}
+              </div>
+              <span className="text-sm font-medium text-gray-700">
+                {user.name.split(" ").slice(0, 2).join(" ")}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Content */}
