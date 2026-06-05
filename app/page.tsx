@@ -81,9 +81,11 @@ export default function HomePage() {
   if (loading || user) return null;
 
   return (
-    <div className="flex h-screen">
-      {/* Coluna esquerda - Desktop only */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-b from-indigo-600 via-purple-600 to-purple-700 flex-col items-center justify-between p-12 relative overflow-hidden">
+    <div className="flex min-h-screen items-center justify-center p-4 lg:p-8 bg-gradient-to-br from-slate-50 via-purple-50 to-slate-100">
+      {/* Card de login com espaço livre em volta */}
+      <div className="flex w-full max-w-5xl shadow-2xl rounded-3xl overflow-hidden">
+        {/* Coluna esquerda - Desktop only */}
+        <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-b from-indigo-600 via-purple-600 to-purple-700 flex-col items-center justify-between p-12 relative overflow-hidden">
         {/* Imagem de fundo da Igreja */}
         <div className="absolute inset-0">
           <Image
@@ -127,9 +129,9 @@ export default function HomePage() {
       </div>
 
       {/* Coluna direita - Card de login */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-4 lg:p-6 bg-gradient-to-br from-slate-50 to-slate-100">
-        <div className="w-full max-w-sm lg:max-w-md">
-          <div className="bg-white rounded-3xl shadow-2xl p-8 lg:p-10">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-12 bg-white">
+        <div className="w-full">
+          <div className="p-8 lg:p-10">
             {/* Header */}
             <div className="text-center mb-8">
               <h1 className="text-4xl font-bold text-slate-900">Agenda Santa</h1>
@@ -173,6 +175,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
