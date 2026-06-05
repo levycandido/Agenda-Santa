@@ -81,9 +81,12 @@ export default function HomePage() {
   return (
     <div className="flex min-h-screen items-center justify-center">
       <div className="w-full max-w-sm rounded-xl bg-white p-8 shadow-lg">
-        <h1 className="mb-2 text-center text-2xl font-bold text-gray-800">
+        <h1 className="mb-1 text-center text-2xl font-bold text-gray-800">
           Agenda Santa
         </h1>
+        <p className="mb-6 text-center text-xs text-gray-400">
+          Igreja Batista Vida Abundante
+        </p>
         <p className="mb-6 text-center text-sm text-gray-500">
           Escolha como deseja entrar
         </p>
