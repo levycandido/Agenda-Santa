@@ -29,6 +29,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const { title, subtitle } = getPageTitle();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  console.log("Layout: user =", user);
+  console.log("Layout: mobileMenuOpen =", mobileMenuOpen);
+
   return (
     <div className="flex h-screen bg-[#f0f4f8]">
       {/* Desktop sidebar */}
@@ -119,10 +122,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 </Link>
               </nav>
               {user && (
-                <div className="border-t border-gray-200 px-4 py-3">
-                  <p className="text-xs text-gray-500 mb-1">Logado como:</p>
-                  <p className="text-sm font-medium text-gray-900">{user.name}</p>
-                </div>
+                <>
+                  {console.log("USER FOUND IN MENU:", user.name)}
+                  <div className="border-t border-gray-200 px-4 py-3">
+                    <p className="text-xs text-gray-500 mb-1">Logado como:</p>
+                    <p className="text-sm font-medium text-gray-900">{user.name}</p>
+                  </div>
+                </>
               )}
               <button
                 onClick={() => {
