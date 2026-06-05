@@ -54,7 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser({
         userId: me.userId || decoded.sub,
         email: me.email || decoded.email || "",
-        name: me.nome || decoded.name || decoded.given_name || "",
+        name: decoded.name || decoded.given_name || me.nome || "",
         roles: me.roles || [],
         permissions: processedPermissions,
       });
