@@ -81,7 +81,7 @@ export default function HomePage() {
   if (loading || user) return null;
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex h-screen">
       {/* Coluna esquerda - Desktop only */}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-b from-indigo-600 via-purple-600 to-purple-700 flex-col items-center justify-between p-12 relative overflow-hidden">
         {/* Imagem de fundo da Igreja */}
@@ -127,8 +127,8 @@ export default function HomePage() {
       </div>
 
       {/* Coluna direita - Card de login */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 bg-gradient-to-br from-slate-50 to-slate-100">
-        <div className="w-full max-w-md">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-4 lg:p-6 bg-gradient-to-br from-slate-50 to-slate-100">
+        <div className="w-full max-w-sm lg:max-w-md">
           <div className="bg-white rounded-3xl shadow-2xl p-8 lg:p-10">
             {/* Header */}
             <div className="text-center mb-8">
