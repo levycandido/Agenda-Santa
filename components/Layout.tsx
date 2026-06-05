@@ -19,7 +19,7 @@ function getPageTitle(): { title: string; subtitle: string } {
   const pathname = usePathname();
   if (pathname === "/events") return { title: "Agenda", subtitle: "Visualize sua agenda" };
   if (pathname === "/users") return { title: "Usuários", subtitle: "Gerencie os colaboradores" };
-  if (pathname === "/rooms") return { title: "Salas", subtitle: "Gerencie as salas" };
+  if (pathname === "/sala") return { title: "Salas", subtitle: "Gerencie as salas" };
   return { title: "Agenda Santa", subtitle: "" };
 }
 
@@ -103,10 +103,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   Usuários
                 </Link>
                 <Link
-                  href="/rooms"
+                  href="/sala"
                   onClick={() => setMobileMenuOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 text-sm font-medium border-l-4 transition-colors ${
-                    pathname === "/rooms"
+                    pathname === "/sala"
                       ? "border-indigo-600 bg-indigo-50 text-indigo-600"
                       : "border-transparent text-gray-700 hover:bg-gray-50"
                   }`}
@@ -166,12 +166,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
               Usuários
             </span>
           </Link>
-          <Link href="/rooms" className="flex flex-col items-center gap-0.5 px-3 py-2 text-gray-500 hover:text-indigo-600">
+          <Link href="/sala" className="flex flex-col items-center gap-0.5 px-3 py-2 text-gray-500 hover:text-indigo-600">
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <rect x="4" y="5" width="16" height="7" rx="2" /><rect x="2" y="10" width="4" height="7" rx="2" />
               <rect x="18" y="10" width="4" height="7" rx="2" /><rect x="4" y="13" width="16" height="4" rx="1" />
             </svg>
-            <span className={`text-xs ${pathname === "/rooms" ? "font-semibold text-indigo-600" : ""}`}>
+            <span className={`text-xs ${pathname === "/sala" ? "font-semibold text-indigo-600" : ""}`}>
               Salas
             </span>
           </Link>

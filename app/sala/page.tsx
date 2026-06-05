@@ -98,7 +98,7 @@ export default function RoomsPage() {
               {/* New room */}
               {canCreate && (
                 <button
-                  onClick={() => router.push("/rooms/new")}
+                  onClick={() => router.push("/sala/new")}
                   className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors font-medium whitespace-nowrap"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -171,7 +171,7 @@ export default function RoomsPage() {
                       <div className="flex items-center gap-2 shrink-0">
                         <button
                           onClick={() =>
-                            router.push(`/rooms/${r.roomId}/edit?name=${encodeURIComponent(r.name)}`)
+                            router.push(`/sala/${r.roomId}/edit?name=${encodeURIComponent(r.name)}`)
                           }
                           title="Alterar sala"
                           className="w-9 h-9 flex items-center justify-center rounded-lg border border-indigo-200 text-indigo-600 hover:bg-indigo-50 transition-colors"
@@ -239,7 +239,7 @@ export default function RoomsPage() {
                   <button
                     key={r.roomId}
                     onClick={() =>
-                      router.push(`/rooms/${r.roomId}/edit?name=${encodeURIComponent(r.name)}`)
+                      router.push(`/sala/${r.roomId}/edit?name=${encodeURIComponent(r.name)}`)
                     }
                     className="text-left w-full bg-white rounded-lg flex items-center gap-3 px-4 py-3 border border-gray-100 hover:bg-gray-50 transition-colors"
                   >

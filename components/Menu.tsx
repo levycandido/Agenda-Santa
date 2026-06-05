@@ -130,10 +130,10 @@ export function Menu() {
         )}
         {has("ROOMS_VIEW", "ROOMS_CREATE") && (
           <NavItem
-            href="/rooms"
+            href="/sala"
             icon={<DoorIcon />}
             label="Salas"
-            active={pathname?.startsWith("/rooms") ?? false}
+            active={pathname?.startsWith("/sala") ?? false}
           />
         )}
         <NavItem

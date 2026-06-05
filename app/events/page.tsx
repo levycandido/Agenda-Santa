@@ -687,7 +687,7 @@ export default function EventsPage() {
                     </svg>
                     <span className="text-xs">Usuários</span>
                   </Link>
-                  <Link href="/rooms" className="flex flex-col items-center gap-0.5 px-3 py-1 text-gray-500">
+                  <Link href="/sala" className="flex flex-col items-center gap-0.5 px-3 py-1 text-gray-500">
                     <CouchIcon color="#6b7280" size={24} />
                     <span className="text-xs">Salas</span>
                   </Link>
