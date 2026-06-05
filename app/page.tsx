@@ -124,20 +124,8 @@ export default function HomePage() {
             <div className="absolute inset-0 bg-gradient-to-b from-indigo-600/40 via-purple-600/60 to-purple-700/80" />
           </div>
 
-          {/* Ícone da Igreja no topo */}
-          <div className="relative z-10 mt-8">
-            <svg viewBox="0 0 100 120" className="w-20 h-20" fill="none">
-              <circle cx="50" cy="30" r="15" fill="white" />
-              <circle cx="35" cy="20" r="10" fill="white" />
-              <circle cx="50" cy="10" r="12" fill="white" />
-              <circle cx="65" cy="20" r="10" fill="white" />
-              <path d="M 20 50 L 50 30 L 80 50" stroke="white" strokeWidth="3" fill="none" />
-              <rect x="25" y="50" width="50" height="45" stroke="white" strokeWidth="3" fill="none" />
-            </svg>
-          </div>
-
-          {/* Citação no rodapé */}
-          <blockquote className="relative z-10 text-center mb-12">
+        {/* Citação no rodapé */}
+          <blockquote className="relative z-10 text-center mb-12 mt-6">
             <p className="text-white text-lg font-medium leading-relaxed">Portanto, ide, ensinai todas as nações</p>
             <p className="text-white text-lg font-medium leading-relaxed">batizando-as em nome do Pai, e do Filho, e do Espírito Santo.</p>
             <footer className="mt-4 text-sm text-indigo-100">Mateus 28:19</footer>

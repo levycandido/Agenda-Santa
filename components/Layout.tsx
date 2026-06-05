@@ -23,7 +23,7 @@ function getPageTitle(): { title: string; subtitle: string } {
   return { title: "Agenda Santa", subtitle: "" };
 }
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export function Layout({ children, onAddClick }: { children: React.ReactNode; onAddClick?: () => void }) {
   const { user, logout } = useAuth();
   const pathname = usePathname();
   const { title, subtitle } = getPageTitle();
@@ -53,7 +53,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <p className="text-white font-bold text-base leading-tight">{title}</p>
             <p className="text-indigo-200 text-xs leading-tight">{subtitle}</p>
           </div>
-          <button className="text-white p-1 relative hover:bg-indigo-700 rounded transition-colors" aria-label="Nova ação">
+          <button
+            onClick={onAddClick}
+            disabled={!onAddClick}
+            className="text-white p-1 relative hover:bg-indigo-700 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Nova ação"
+          >
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
             </svg>
