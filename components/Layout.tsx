@@ -118,9 +118,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   Salas
                 </Link>
               </nav>
-              <div className="border-t border-gray-200 px-4 py-3">
+              <div className="border-t border-gray-200 px-4 py-3 bg-yellow-50">
                 <p className="text-xs text-gray-500 mb-1">Logado como:</p>
-                <p className="text-sm font-medium text-gray-900">{user?.name || "Carregando..."}</p>
+                <p className="text-sm font-medium text-gray-900">{user?.name || `[user=${user ? "OK" : "NULL"}]`}</p>
               </div>
               <button
                 onClick={() => {
