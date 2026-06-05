@@ -106,18 +106,6 @@ export default function HomePage() {
         }}
       />
 
-      {/* Ícone da Igreja no topo (Mobile) */}
-      <div className="absolute top-16 left-1/2 -translate-x-1/2 z-20 lg:hidden">
-        <svg viewBox="0 0 100 120" className="w-16 h-16" fill="none">
-          <circle cx="50" cy="30" r="15" fill="white" />
-          <circle cx="35" cy="20" r="10" fill="white" />
-          <circle cx="50" cy="10" r="12" fill="white" />
-          <circle cx="65" cy="20" r="10" fill="white" />
-          <path d="M 20 50 L 50 30 L 80 50" stroke="white" strokeWidth="3" fill="none" />
-          <rect x="25" y="50" width="50" height="45" stroke="white" strokeWidth="3" fill="none" />
-        </svg>
-      </div>
-
       {/* Card de login */}
       <div className="flex w-full lg:max-w-5xl shadow-2xl rounded-t-3xl lg:rounded-3xl overflow-hidden relative z-10 lg:bg-white">
         {/* Coluna esquerda - Desktop only */}
