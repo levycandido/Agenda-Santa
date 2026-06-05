@@ -839,17 +839,18 @@ export default function EventsPage() {
                 Salas
               </Link>
             </nav>
-            <div className="border-t border-gray-200 px-4 py-3">
-              <p className="text-xs text-gray-500 mb-1">Logado como:</p>
-              <p className="text-sm font-medium text-gray-900">{user?.name || "[não carregado]"}</p>
-            </div>
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                user?.permissions && logout();
-              }}
-              className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium border-l-4 border-transparent text-gray-600 hover:bg-gray-50 transition-colors border-t border-gray-200"
-            >
+            <div className="mt-auto flex flex-col">
+              <div className="border-t border-gray-200 px-4 py-3">
+                <p className="text-xs text-gray-500 mb-1">Logado como:</p>
+                <p className="text-sm font-medium text-gray-900">{user?.name || "[não carregado]"}</p>
+              </div>
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  user?.permissions && logout();
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium border-l-4 border-transparent text-gray-600 hover:bg-gray-50 transition-colors border-t border-gray-200"
+              >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                   <polyline points="16 17 21 12 16 7" />
@@ -857,6 +858,7 @@ export default function EventsPage() {
                 </svg>
                 Deslogar
               </button>
+            </div>
           </div>
         </div>
       )}

@@ -118,24 +118,26 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   Salas
                 </Link>
               </nav>
-              <div className="border-t border-gray-200 px-4 py-3 bg-yellow-50">
-                <p className="text-xs text-gray-500 mb-1">Logado como:</p>
-                <p className="text-sm font-medium text-gray-900">{user?.name || `[user=${user ? "OK" : "NULL"}]`}</p>
+              <div className="mt-auto flex flex-col">
+                <div className="border-t border-gray-200 px-4 py-3">
+                  <p className="text-xs text-gray-500 mb-1">Logado como:</p>
+                  <p className="text-sm font-medium text-gray-900">{user?.name || "[não carregado]"}</p>
+                </div>
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    logout();
+                  }}
+                  className="flex items-center gap-3 px-4 py-3 text-sm font-medium border-t border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors w-full"
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                  </svg>
+                  Deslogar
+                </button>
               </div>
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  logout();
-                }}
-                className="flex items-center gap-3 px-4 py-3 text-sm font-medium border-t border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors w-full"
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                  <polyline points="16 17 21 12 16 7" />
-                  <line x1="21" y1="12" x2="9" y2="12" />
-                </svg>
-                Deslogar
-              </button>
             </div>
           </div>
         )}
