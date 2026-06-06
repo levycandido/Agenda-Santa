@@ -31,13 +31,13 @@ export function Layout({ children, onAddClick }: { children: React.ReactNode; on
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="flex min-h-[100dvh] bg-[#f0f4f8] md:h-screen">
+    <div className="flex h-[100dvh] bg-[#f0f4f8] relative">
       {/* Desktop sidebar */}
       <div className="hidden md:block">
         <Menu />
       </div>
 
-      <div className="flex flex-col flex-1 min-w-0 overflow-hidden md:overflow-visible">
+      <div className="flex flex-col flex-1 min-w-0">
         {/* Mobile top bar */}
         <div className="md:hidden bg-indigo-600 px-4 py-3 flex items-center justify-between shrink-0 relative z-40">
           <button
@@ -163,7 +163,7 @@ export function Layout({ children, onAddClick }: { children: React.ReactNode; on
         </div>
 
         {/* Main content */}
-        <main className="flex-1 overflow-auto md:p-6 p-4 md:pb-4 pb-24">{children}</main>
+        <main className="flex-1 overflow-y-auto md:p-6 p-4 md:pb-4 pb-32">{children}</main>
 
         {/* Mobile bottom navigation */}
         <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex items-center justify-around px-2 py-2 z-50" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
