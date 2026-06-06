@@ -90,7 +90,7 @@ type DialogState = {
 
 function AppDialog({ message, onOk, onCancel }: NonNullable<DialogState>) {
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50">
+    <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/50">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-sm p-6 mx-4">
         <h3 className="text-base font-semibold text-gray-900 mb-3">Agenda Santa</h3>
         <p className="text-sm text-gray-700 mb-6">{message}</p>
@@ -129,6 +129,10 @@ export default function EventsPage() {
   const [mobileCollabPos, setMobileCollabPos] = useState<{ top: number; left: number; width: number } | null>(null);
   const mobileCollabBtnRef = useRef<HTMLButtonElement>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileEventForm, setMobileEventForm] = useState<{ day: string; hour: string; roomId: string } | null>(null);
+  const [mobileEventDescription, setMobileEventDescription] = useState("");
+  const [mobileEventLoading, setMobileEventLoading] = useState(false);
+  const [mobileCollabDropdownOpen, setMobileCollabDropdownOpen] = useState(false);
 
   function openMobileCollab() {
     if (mobileCollabBtnRef.current) {
@@ -301,10 +305,7 @@ export default function EventsPage() {
       showAlert("Você não tem permissão para criar ou editar eventos.");
       return;
     }
-    if (!selectedUserName) {
-      showAlert("Selecione uma pessoa antes de criar um evento.");
-      return;
-    }
+
     const existing = allEvents.find(
       (ev) => ev.eventDate === day && ev.roomId === roomId && ev.startTime.slice(0, 2) === hour.slice(0, 2)
     );
@@ -318,10 +319,23 @@ export default function EventsPage() {
       );
       return;
     }
+
+    // Mobile: Open event creation form
+    if (window.innerWidth < 768) {
+      setMobileEventForm({ day, hour, roomId });
+      setMobileEventDescription("");
+      return;
+    }
+
+    // Desktop: Create event immediately
+    if (!selectedUserName) {
+      showAlert("Selecione uma pessoa antes de criar um evento.");
+      return;
+    }
     const selectedUser = users.find((u) => u.name === selectedUserName);
     if (!selectedUser) return;
     try {
-      await createEvent({
+      const response = await createEvent({
         userId: selectedUser.userId,
         userName: selectedUser.name,
         roomId,
@@ -330,9 +344,89 @@ export default function EventsPage() {
         endTime: addOneHour(hour),
         description: eventDescription || undefined,
       });
-      setAllEvents(await listEvents());
+
+      // Optimistic update - add new event to local state immediately
+      const newEvent: Event = {
+        eventId: response?.eventId || `temp-${Date.now()}`,
+        userId: selectedUser.userId,
+        userName: selectedUser.name,
+        roomId,
+        eventDate: day,
+        startTime: hour,
+        endTime: addOneHour(hour),
+        description: eventDescription || undefined,
+      };
+      setAllEvents((prev) => [...prev, newEvent]);
       setEventDescription("");
     } catch { showAlert("Erro ao salvar evento."); }
+  }
+
+  async function handleMobileEventSave() {
+    if (!mobileEventForm || !selectedUserName) {
+      showAlert("Selecione um colaborador antes de criar um evento.");
+      return;
+    }
+    const selectedUser = users.find((u) => u.name === selectedUserName);
+    if (!selectedUser) return;
+
+    const startTime = performance.now();
+    const eventDetails = {
+      usuario: selectedUser.name,
+      sala: rooms.find((r) => r.roomId === mobileEventForm.roomId)?.name || mobileEventForm.roomId,
+      data: mobileEventForm.day,
+      hora: mobileEventForm.hour,
+      descricao: mobileEventDescription || "Sem descrição",
+      timestampInicio: new Date().toLocaleTimeString("pt-BR"),
+    };
+
+    setMobileEventLoading(true);
+
+    const newEventData = {
+      userId: selectedUser.userId,
+      userName: selectedUser.name,
+      roomId: mobileEventForm.roomId,
+      eventDate: mobileEventForm.day,
+      startTime: mobileEventForm.hour,
+      endTime: addOneHour(mobileEventForm.hour),
+      description: mobileEventDescription || undefined,
+    };
+
+    // Close modal immediately
+    setMobileEventForm(null);
+    setMobileEventDescription("");
+
+    try {
+      const response = await createEvent(newEventData);
+
+      // Optimistic update - add new event to local state immediately
+      const optimisticEvent: Event = {
+        eventId: response?.eventId || `temp-${Date.now()}`,
+        ...newEventData,
+      };
+      setAllEvents((prev) => [...prev, optimisticEvent]);
+
+      const endTime = performance.now();
+      const duracao = Math.round((endTime - startTime) * 100) / 100;
+
+      const logMessage = {
+        tipo: "CRIACAO_EVENTO_MOBILE",
+        duracao_ms: duracao,
+        timestamp_fim: new Date().toLocaleTimeString("pt-BR"),
+        evento: eventDetails,
+      };
+
+      console.log("=== LOG DE CRIAÇÃO DE EVENTO ===");
+      console.log(`Tempo total de demora: ${duracao}ms`);
+      console.log("Detalhes do evento:", eventDetails);
+      console.log("Timestamp de início:", eventDetails.timestampInicio);
+      console.log("Timestamp de término:", new Date().toLocaleTimeString("pt-BR"));
+      console.log("Log completo:", logMessage);
+      console.log("==============================");
+    } catch {
+      showAlert("Erro ao salvar evento.");
+    } finally {
+      setMobileEventLoading(false);
+    }
   }
 
   const gridCols = rooms.length > 0 ? `80px repeat(${rooms.length}, minmax(100px, 1fr))` : "80px 1fr";
@@ -343,10 +437,10 @@ export default function EventsPage() {
     return (
       <div
         key={ev.eventId}
-        className={`rounded-md border-l-4 ${compact ? "px-2 py-1.5 mb-1" : "px-3 py-2 mb-1"}`}
+        className={`rounded-md border-l-4 h-full flex flex-col ${compact ? "px-2 py-1.5" : "px-3 py-2"}`}
         style={{ backgroundColor: color + "18", borderLeftColor: color }}
       >
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center justify-between gap-2 flex-shrink-0">
           <p className={`font-bold truncate ${compact ? "text-xs" : "text-sm"}`} style={{ color }}>
             {ev.startTime} - {ev.endTime}
           </p>
@@ -355,7 +449,7 @@ export default function EventsPage() {
           </p>
         </div>
         {ev.description && (
-          <p className={`text-gray-600 truncate ${compact ? "text-xs mt-0.5" : "text-xs mt-0.5"}`}>
+          <p className={`text-gray-600 truncate ${compact ? "text-xs mt-0.5" : "text-xs mt-0.5"} flex-grow`}>
             {ev.description}
           </p>
         )}
@@ -538,11 +632,6 @@ export default function EventsPage() {
           <>
             {/* ── MOBILE LAYOUT ── */}
               <div className="md:hidden h-full flex flex-col bg-[#f8f8fb]">
-
-                {/* Filters */}
-                <div className="shrink-0 bg-white px-4 pt-4 pb-4 border-b border-gray-100">
-                  {FilterControls({ stacked: true })}
-                </div>
 
                 {/* Room tabs */}
                 <div className="shrink-0 bg-white px-4 py-3 flex gap-2 overflow-x-auto border-b border-gray-100" style={{ scrollbarWidth: "none" }}>
@@ -827,6 +916,148 @@ export default function EventsPage() {
       )}
 
       {dialog && <AppDialog {...dialog} />}
+
+      {/* Mobile Event Creation Modal */}
+      {mobileEventForm && (
+        <div className="fixed inset-0 z-[9999] flex items-end md:hidden">
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setMobileEventForm(null)}
+          />
+          <div className="relative bg-white w-full rounded-t-2xl shadow-xl p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-gray-900">Novo Evento</h2>
+              <button
+                onClick={() => setMobileEventForm(null)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="space-y-4 mb-6">
+              {/* Date */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Data</label>
+                <div className="px-3 py-2.5 border border-gray-200 rounded-lg bg-gray-50 text-sm text-gray-700">
+                  {formatDateDisplay(mobileEventForm.day)}
+                </div>
+              </div>
+
+              {/* Time */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Horário</label>
+                <div className="px-3 py-2.5 border border-gray-200 rounded-lg bg-gray-50 text-sm text-gray-700">
+                  {mobileEventForm.hour} – {addOneHour(mobileEventForm.hour)}
+                </div>
+              </div>
+
+              {/* Room */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Sala</label>
+                <div className="px-3 py-2.5 border border-gray-200 rounded-lg bg-gray-50 text-sm text-gray-700">
+                  {rooms.find((r) => r.roomId === mobileEventForm.roomId)?.name || mobileEventForm.roomId}
+                </div>
+              </div>
+
+              {/* Collaborator Dropdown */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Colaborador</label>
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setMobileCollabDropdownOpen(!mobileCollabDropdownOpen)}
+                    className="w-full flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 text-left"
+                  >
+                    {selectedUserName ? (
+                      <>
+                        <span
+                          className="w-3 h-3 rounded-full flex-shrink-0"
+                          style={{ backgroundColor: userColorMap.get(selectedUserName) || "#6366f1" }}
+                        />
+                        <span className="text-gray-800 truncate flex-1">{selectedUserName}</span>
+                      </>
+                    ) : (
+                      <span className="text-gray-500">Selecione um colaborador</span>
+                    )}
+                    <svg className="w-4 h-4 text-gray-400 flex-shrink-0 ml-auto" viewBox="0 0 20 20" fill="currentColor">
+                      <path
+                        fillRule="evenodd"
+                        d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </button>
+
+                  {mobileCollabDropdownOpen && (
+                    <div className="absolute z-[10000] mt-1 bg-white border border-gray-200 rounded-lg shadow-lg w-full py-1 max-h-60 overflow-auto">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedUserName("");
+                          setMobileCollabDropdownOpen(false);
+                        }}
+                        className="w-full text-left px-3 py-2 text-sm text-gray-400 hover:bg-gray-50"
+                      >
+                        Limpar seleção
+                      </button>
+                      {activeUsers.map((u) => {
+                        const color = u.color || u.cor || "#6366f1";
+                        return (
+                          <button
+                            key={u.userId}
+                            type="button"
+                            onClick={() => {
+                              setSelectedUserName(u.name);
+                              setMobileCollabDropdownOpen(false);
+                            }}
+                            className={`w-full text-left flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50 ${
+                              selectedUserName === u.name ? "bg-indigo-50 text-indigo-700 font-semibold" : "text-gray-800"
+                            }`}
+                          >
+                            <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
+                            {u.name}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Description */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Descrição (opcional)</label>
+                <input
+                  type="text"
+                  value={mobileEventDescription}
+                  onChange={(e) => setMobileEventDescription(e.target.value)}
+                  placeholder="Digite uma descrição..."
+                  className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setMobileEventForm(null)}
+                className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleMobileEventSave}
+                className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
+              >
+                Inserir Evento
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Mobile collaborator dropdown — position:fixed below the button, bypasses overflow-hidden */}
       {mobileCollabOpen && mobileCollabPos && (
