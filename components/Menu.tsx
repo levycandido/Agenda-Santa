@@ -45,6 +45,15 @@ function SettingsIcon({ className = "w-5 h-5" }: { className?: string }) {
   );
 }
 
+function ChartIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <polyline points="23 6 13.5 15.5 8.5 10.5 1 17" />
+      <polyline points="17 6 23 6 23 12" />
+    </svg>
+  );
+}
+
 function LogoutIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -136,6 +145,14 @@ export function Menu() {
             active={pathname?.startsWith("/sala") ?? false}
           />
         )}
+         {has("ROOMS_VIEW", "ROOMS_CREATE") && (
+          <NavItem
+            href="/relatorios"
+            icon={<ChartIcon />}
+            label="Relatórios"
+            active={pathname?.startsWith("/relatorios") ?? false}
+          />
+        )}
         <NavItem
           href="/settings"
           icon={<SettingsIcon />}
@@ -144,12 +161,6 @@ export function Menu() {
         />
 
         <div className="mt-auto pt-3">
-          {user && (
-            <div className="border-t border-gray-100 pt-3 pb-3">
-              <p className="text-xs text-gray-500 px-4">Logado como:</p>
-              <p className="text-sm font-medium text-gray-900 px-4 truncate">{user.name}</p>
-            </div>
-          )}
           <div className="border-t border-gray-100 pt-2">
             <button
               onClick={logout}
