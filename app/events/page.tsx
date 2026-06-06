@@ -123,6 +123,7 @@ export default function EventsPage() {
   const [allEvents, setAllEvents] = useState<Event[]>([]);
   const [days, setDays] = useState<string[]>(() => generateDays(today, 0, 6));
   const [dialog, setDialog] = useState<DialogState>(null);
+  const [eventDescription, setEventDescription] = useState("");
   const [userSelectOpen, setUserSelectOpen] = useState(false);
   const [mobileCollabOpen, setMobileCollabOpen] = useState(false);
   const [mobileCollabPos, setMobileCollabPos] = useState<{ top: number; left: number; width: number } | null>(null);
@@ -320,8 +321,17 @@ export default function EventsPage() {
     const selectedUser = users.find((u) => u.name === selectedUserName);
     if (!selectedUser) return;
     try {
-      await createEvent({ userId: selectedUser.userId, userName: selectedUser.name, roomId, eventDate: day, startTime: hour, endTime: addOneHour(hour) });
+      await createEvent({
+        userId: selectedUser.userId,
+        userName: selectedUser.name,
+        roomId,
+        eventDate: day,
+        startTime: hour,
+        endTime: addOneHour(hour),
+        description: eventDescription || undefined,
+      });
       setAllEvents(await listEvents());
+      setEventDescription("");
     } catch { showAlert("Erro ao salvar evento."); }
   }
 
@@ -336,16 +346,19 @@ export default function EventsPage() {
         className={`rounded-md border-l-4 ${compact ? "px-2 py-1.5 mb-1" : "px-3 py-2 mb-1"}`}
         style={{ backgroundColor: color + "18", borderLeftColor: color }}
       >
-        <p className={`font-bold truncate ${compact ? "text-xs" : "text-sm"}`} style={{ color }}>
-          {ev.startTime} - {ev.endTime}
-        </p>
-        <p className={`text-gray-700 truncate ${compact ? "text-xs mt-0.5" : "text-xs mt-0.5"}`}>
-          {ev.userName}
-        </p>
-        <div className="flex items-center gap-1 mt-0.5">
-          <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
-          <span className="text-xs text-gray-500">Reunião</span>
+        <div className="flex items-center justify-between gap-2">
+          <p className={`font-bold truncate ${compact ? "text-xs" : "text-sm"}`} style={{ color }}>
+            {ev.startTime} - {ev.endTime}
+          </p>
+          <p className={`text-gray-700 truncate ${compact ? "text-xs" : "text-xs"}`}>
+            {ev.userName}
+          </p>
         </div>
+        {ev.description && (
+          <p className={`text-gray-600 truncate ${compact ? "text-xs mt-0.5" : "text-xs mt-0.5"}`}>
+            {ev.description}
+          </p>
+        )}
       </div>
     );
   }
@@ -389,41 +402,25 @@ export default function EventsPage() {
           </div>
         </div>
 
-        {/* Collaborator — mobile: native <select>; desktop: custom dropdown */}
-        <div className={stacked ? "w-full" : ""}>
-          <div className="flex items-center gap-1.5 text-xs font-medium text-gray-500 mb-1.5">
-            {usersIcon} Colaborador
-          </div>
-          {stacked ? (
-            /* Mobile: fixed dropdown positioned below the button */
-            <button
-              ref={mobileCollabBtnRef}
-              type="button"
-              onClick={openMobileCollab}
-              className="w-full flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            >
-              {selectedUserName ? (
-                <>
-                  <span className="w-3.5 h-3.5 rounded-full border border-gray-300 flex-shrink-0"
-                    style={{ backgroundColor: userColorMap.get(selectedUserName) || "#94a3b8" }} />
-                  <span className="text-gray-800 truncate">{selectedUserName}</span>
-                </>
-              ) : (
-                <span className="text-gray-500">Todos os colaboradores</span>
-              )}
-              <svg className="ml-auto w-4 h-4 text-gray-400 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
-              </svg>
-            </button>
-          ) : (
-            /* Desktop: custom dropdown */
-            <div className="relative" ref={userSelectRef}>
-              <button type="button" onClick={() => setUserSelectOpen((o) => !o)}
-                className="flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 min-w-[220px]"
+        {/* Collaborator and Description — mobile: stacked; desktop: side by side */}
+        <div className={stacked ? "flex flex-col gap-3 w-full" : "flex gap-3"}>
+          {/* Collaborator */}
+          <div className={stacked ? "w-full" : ""}>
+            <div className="flex items-center gap-1.5 text-xs font-medium text-gray-500 mb-1.5">
+              {usersIcon} Colaborador
+            </div>
+            {stacked ? (
+              /* Mobile: fixed dropdown positioned below the button */
+              <button
+                ref={mobileCollabBtnRef}
+                type="button"
+                onClick={openMobileCollab}
+                className="w-full flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 {selectedUserName ? (
                   <>
-                    <span className="w-3.5 h-3.5 rounded-full border border-gray-300 flex-shrink-0" style={{ backgroundColor: userColorMap.get(selectedUserName) || "#94a3b8" }} />
+                    <span className="w-3.5 h-3.5 rounded-full border border-gray-300 flex-shrink-0"
+                      style={{ backgroundColor: userColorMap.get(selectedUserName) || "#94a3b8" }} />
                     <span className="text-gray-800 truncate">{selectedUserName}</span>
                   </>
                 ) : (
@@ -433,27 +430,58 @@ export default function EventsPage() {
                   <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
                 </svg>
               </button>
-              {userSelectOpen && (
-                <div className="absolute z-50 mt-1 bg-white border border-gray-200 rounded-xl shadow-xl w-full min-w-[220px] py-1 max-h-60 overflow-auto">
-                  <button type="button" onClick={() => { setSelectedUserName(""); setUserSelectOpen(false); }}
-                    className="w-full text-left px-3 py-2 text-sm text-gray-400 hover:bg-gray-50">
-                    Todos os colaboradores
-                  </button>
-                  {activeUsers.map((u) => {
-                    const color = u.color || u.cor || "#94a3b8";
-                    return (
-                      <button key={u.userId} type="button" onClick={() => { setSelectedUserName(u.name); setUserSelectOpen(false); }}
-                        className={`w-full text-left flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50 ${selectedUserName === u.name ? "bg-indigo-50 font-semibold text-indigo-700" : "text-gray-800"}`}
-                      >
-                        <span className="w-3.5 h-3.5 rounded-full border border-gray-300 flex-shrink-0" style={{ backgroundColor: color }} />
-                        {u.name}
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          )}
+            ) : (
+              /* Desktop: custom dropdown */
+              <div className="relative" ref={userSelectRef}>
+                <button type="button" onClick={() => setUserSelectOpen((o) => !o)}
+                  className="flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 min-w-[220px]"
+                >
+                  {selectedUserName ? (
+                    <>
+                      <span className="w-3.5 h-3.5 rounded-full border border-gray-300 flex-shrink-0" style={{ backgroundColor: userColorMap.get(selectedUserName) || "#94a3b8" }} />
+                      <span className="text-gray-800 truncate">{selectedUserName}</span>
+                    </>
+                  ) : (
+                    <span className="text-gray-500">Todos os colaboradores</span>
+                  )}
+                  <svg className="ml-auto w-4 h-4 text-gray-400 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+                  </svg>
+                </button>
+                {userSelectOpen && (
+                  <div className="absolute z-50 mt-1 bg-white border border-gray-200 rounded-xl shadow-xl w-full min-w-[220px] py-1 max-h-60 overflow-auto">
+                    <button type="button" onClick={() => { setSelectedUserName(""); setUserSelectOpen(false); }}
+                      className="w-full text-left px-3 py-2 text-sm text-gray-400 hover:bg-gray-50">
+                      Todos os colaboradores
+                    </button>
+                    {activeUsers.map((u) => {
+                      const color = u.color || u.cor || "#94a3b8";
+                      return (
+                        <button key={u.userId} type="button" onClick={() => { setSelectedUserName(u.name); setUserSelectOpen(false); }}
+                          className={`w-full text-left flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50 ${selectedUserName === u.name ? "bg-indigo-50 font-semibold text-indigo-700" : "text-gray-800"}`}
+                        >
+                          <span className="w-3.5 h-3.5 rounded-full border border-gray-300 flex-shrink-0" style={{ backgroundColor: color }} />
+                          {u.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Description */}
+          <div style={{ width: stacked ? "100%" : "350px" }}>
+            <div className="text-xs font-medium text-gray-500 mb-1.5">Descrição (opcional)</div>
+            <input
+              type="text"
+              value={eventDescription}
+              onChange={(e) => setEventDescription(e.target.value)}
+              placeholder="Digite uma descrição..."
+              className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
         </div>
       </div>
     );
@@ -761,6 +789,17 @@ export default function EventsPage() {
                   <rect x="18" y="10" width="4" height="7" rx="2" /><rect x="4" y="13" width="16" height="4" rx="1" />
                 </svg>
                 Salas
+              </Link>
+              <Link
+                href="/relatorios"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 text-sm font-medium border-l-4 border-transparent text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 17" />
+                  <polyline points="17 6 23 6 23 12" />
+                </svg>
+                Relatórios
               </Link>
             </nav>
             <div className="mt-auto flex flex-col">

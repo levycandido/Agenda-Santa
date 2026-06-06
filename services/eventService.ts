@@ -7,6 +7,7 @@ export type CreateEventRequest = {
   eventDate: string;
   startTime: string;
   endTime: string;
+  description?: string;
 };
 
 export type Event = {
@@ -17,6 +18,7 @@ export type Event = {
   eventDate: string;
   startTime: string;
   endTime: string;
+  description?: string;
 };
 
 export async function deleteEvent(eventId: string): Promise<void> {

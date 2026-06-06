@@ -20,6 +20,7 @@ function getPageTitle(): { title: string; subtitle: string } {
   if (pathname === "/events") return { title: "Agenda", subtitle: "Visualize sua agenda" };
   if (pathname === "/users") return { title: "Usuários", subtitle: "Gerencie os colaboradores" };
   if (pathname === "/sala") return { title: "Salas", subtitle: "Gerencie as salas" };
+  if (pathname === "/relatorios") return { title: "Relatório de Eventos", subtitle: "Visualize os eventos cadastrados" };
   return { title: "Agenda Santa", subtitle: "" };
 }
 
@@ -193,13 +194,15 @@ export function Layout({ children, onAddClick }: { children: React.ReactNode; on
               Salas
             </span>
           </Link>
-          <button className="flex flex-col items-center gap-0.5 px-3 py-2 text-gray-500 hover:text-indigo-600">
+          <Link href="/relatorios" className="flex flex-col items-center gap-0.5 px-3 py-2 text-gray-500 hover:text-indigo-600">
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <circle cx="12" cy="12" r="1" fill="currentColor" /><circle cx="19" cy="12" r="1" fill="currentColor" />
-              <circle cx="5" cy="12" r="1" fill="currentColor" />
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 17" />
+              <polyline points="17 6 23 6 23 12" />
             </svg>
-            <span className="text-xs">Mais</span>
-          </button>
+            <span className={`text-xs ${pathname === "/relatorios" ? "font-semibold text-indigo-600" : ""}`}>
+              Relatórios
+            </span>
+          </Link>
         </div>
       </div>
     </div>
