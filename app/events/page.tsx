@@ -109,93 +109,6 @@ function AppDialog({ message, onOk, onCancel }: NonNullable<DialogState>) {
   );
 }
 
-function NewEventModal({
-  initialDate, initialStart, initialEnd, initialRoomId, initialUserId, onClose, onSaved,
-}: {
-  initialDate: string; initialStart: string; initialEnd: string;
-  initialRoomId: string; initialUserId: string; onClose: () => void; onSaved: () => void;
-}) {
-  const [rooms, setRooms] = useState<Room[]>([]);
-  const [users, setUsers] = useState<UserSummary[]>([]);
-  const [userId, setUserId] = useState(initialUserId);
-  const [roomId, setRoomId] = useState(initialRoomId);
-  const [eventDate, setEventDate] = useState(initialDate);
-  const [startTime, setStartTime] = useState(initialStart);
-  const [endTime, setEndTime] = useState(initialEnd);
-  const [loading, setLoading] = useState(false);
-  const [dialog, setDialog] = useState<DialogState>(null);
-
-  function showAlert(message: string) { setDialog({ message, onOk: () => setDialog(null) }); }
-
-  useEffect(() => {
-    listRooms().then(setRooms).catch((e) => console.error("Erro ao carregar salas", e));
-    listUsers().then(setUsers).catch((e) => console.error("Erro ao carregar usuários", e));
-  }, []);
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const selectedUser = users.find((u) => u.userId === userId);
-    if (!selectedUser) { showAlert("Selecione uma pessoa."); return; }
-    if (!roomId) { showAlert("Selecione uma sala."); return; }
-    if (!eventDate) { showAlert("Informe a data."); return; }
-    if (!startTime) { showAlert("Informe o horário inicial."); return; }
-    if (!endTime) { showAlert("Informe o horário final."); return; }
-    try {
-      setLoading(true);
-      await createEvent({ userId: selectedUser.userId, userName: selectedUser.name, roomId, eventDate, startTime, endTime });
-      setDialog({ message: "Evento salvo com sucesso!", onOk: () => { setDialog(null); onSaved(); } });
-    } catch (error) {
-      console.error(error);
-      showAlert("Erro ao salvar evento.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6 relative">
-        <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl leading-none" aria-label="Fechar">×</button>
-        <h2 className="text-xl font-bold mb-6 text-black">Novo Evento</h2>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <div>
-            <label className="block text-sm font-medium mb-1 text-black">Pessoa</label>
-            <select value={userId} onChange={(e) => setUserId(e.target.value)} className="border rounded px-2 py-1 w-full text-black text-sm" required>
-              <option value="">Selecione uma pessoa</option>
-              {users.filter((u) => u.status !== "DISABLED" && u.status !== "DESATIVADO" && !isUserDeactivated(u.userId)).map((u) => <option key={u.userId} value={u.userId}>{u.name}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1 text-black">Sala</label>
-            <select value={roomId} onChange={(e) => setRoomId(e.target.value)} className="border rounded px-2 py-1 w-full text-black text-sm" required>
-              <option value="">Selecione uma sala</option>
-              {rooms.map((r) => <option key={r.roomId} value={r.roomId}>{r.name}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1 text-black">Data</label>
-            <input type="date" value={eventDate} onChange={(e) => setEventDate(e.target.value)} className="border rounded px-2 py-1 w-full text-black text-sm" required />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1 text-black">Hora Inicial</label>
-            <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} className="border rounded px-2 py-1 w-full text-black text-sm" required />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1 text-black">Hora Final</label>
-            <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} className="border rounded px-2 py-1 w-full text-black text-sm" required />
-          </div>
-          <div className="flex gap-3 mt-2">
-            <button type="button" onClick={onClose} className="flex-1 border rounded px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Cancelar</button>
-            <button type="submit" disabled={loading} className="flex-1 bg-indigo-600 text-white rounded px-4 py-2 text-sm hover:bg-indigo-700 disabled:opacity-60">
-              {loading ? "Salvando..." : "Salvar"}
-            </button>
-          </div>
-        </form>
-      </div>
-      {dialog && <AppDialog {...dialog} />}
-    </div>
-  );
-}
 
 export default function EventsPage() {
   const today = todayIso();
@@ -205,7 +118,6 @@ export default function EventsPage() {
   const [startTime, setStartTime] = useState("");
   const [selectedUserName, setSelectedUserName] = useState("");
   const [selectedRoomId, setSelectedRoomId] = useState<string>("");
-  const [modalOpen, setModalOpen] = useState(false);
   const [rooms, setRooms] = useState<Room[]>([]);
   const [users, setUsers] = useState<UserSummary[]>([]);
   const [allEvents, setAllEvents] = useState<Event[]>([]);
@@ -698,17 +610,6 @@ export default function EventsPage() {
                   </div>
                 </div>
 
-                {/* FAB */}
-                {canCreate && (
-                  <button
-                    onClick={() => setModalOpen(true)}
-                    className="fixed bottom-[72px] right-4 w-14 h-14 bg-indigo-600 hover:bg-indigo-700 rounded-full shadow-xl flex items-center justify-center text-white text-3xl transition-colors z-40"
-                    aria-label="Novo evento"
-                  >
-                    +
-                  </button>
-                )}
-
                 {/* Bottom navigation */}
                 <div className="shrink-0 bg-white border-t border-gray-200 flex items-center justify-around px-2 py-2 z-30">
                   <Link href="/events" className="flex flex-col items-center gap-0.5 px-3 py-1 text-indigo-600">
@@ -884,18 +785,6 @@ export default function EventsPage() {
             </div>
           </div>
         </div>
-      )}
-
-      {modalOpen && (
-        <NewEventModal
-          initialDate={eventDate}
-          initialStart={startTime}
-          initialEnd={startTime ? addOneHour(startTime) : ""}
-          initialRoomId={selectedRoomId}
-          initialUserId={users.find((u) => u.name === selectedUserName)?.userId ?? ""}
-          onClose={() => setModalOpen(false)}
-          onSaved={() => { setModalOpen(false); listEvents().then(setAllEvents).catch(console.error); }}
-        />
       )}
 
       {dialog && <AppDialog {...dialog} />}
